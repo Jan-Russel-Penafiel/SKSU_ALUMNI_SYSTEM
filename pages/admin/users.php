@@ -140,7 +140,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     <div class="modal-head">
       <div>
         <h3 id="userModalTitle" data-modal-title>Create new user</h3>
-        <div class="modal-sub">Account details &mdash; assign role and access status.</div>
+        <div class="modal-sub">Account details. Assign role and access status.</div>
       </div>
       <button type="button" class="modal-close" data-modal-close aria-label="Close">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>

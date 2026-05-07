@@ -57,7 +57,7 @@ function require_role($roles) {
     if (!is_array($roles)) $roles = [$roles];
     if (!in_array(current_role(), $roles, true)) {
         http_response_code(403);
-        die('Forbidden — your role does not have access to this page.');
+        die('Forbidden. Your role does not have access to this page.');
     }
 }
 

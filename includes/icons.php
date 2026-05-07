@@ -1,6 +1,6 @@
 <?php
 // =============================================================
-// SVG Icon Library — replaces emojis with crisp inline SVGs
+// SVG Icon Library replaces emojis with crisp inline SVGs
 // Usage: echo icon('home', 'w-5 h-5');
 // =============================================================
 

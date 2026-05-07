@@ -34,7 +34,7 @@ mysqli_close($conn);
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8">
-<title>Setup — SKSU Alumni System</title>
+<title>Setup | SKSU Alumni System</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head><body class="bg-gray-50 min-h-screen flex items-center justify-center">
 <div class="max-w-lg w-full bg-white rounded-2xl shadow-lg border-t-4 border-red-700 p-8">
@@ -46,8 +46,8 @@ mysqli_close($conn);
   <div class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
     <p class="font-semibold text-red-800">Default credentials:</p>
     <ul class="mt-2 space-y-1 text-gray-700">
-      <li>Admin — <code>admin@sksu.edu.ph</code> / <code>Admin@123</code></li>
-      <li>Registrar — <code>registrar@sksu.edu.ph</code> / <code>Registrar@123</code></li>
+      <li>Admin: <code>admin@sksu.edu.ph</code> / <code>Admin@123</code></li>
+      <li>Registrar: <code>registrar@sksu.edu.ph</code> / <code>Registrar@123</code></li>
     </ul>
   </div>
   <a href="<?= APP_URL ?>/login.php" class="mt-6 block text-center bg-red-700 hover:bg-red-800 text-white font-semibold py-2.5 px-4 rounded-lg">Go to Login</a>

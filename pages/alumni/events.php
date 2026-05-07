@@ -18,7 +18,7 @@ include __DIR__ . '/../../templates/sidebar.php';
   <div class="page-head">
     <div>
       <h1>Alumni Events &amp; Activities</h1>
-      <p class="subtitle">Stay engaged &mdash; register for upcoming events.</p>
+      <p class="subtitle">Stay engaged. Register for upcoming events.</p>
     </div>
   </div>
 

@@ -7,6 +7,7 @@ require_once __DIR__ . '/../includes/helpers.php';
 
 $page_title = $page_title ?? 'Dashboard';
 $body_class = $body_class ?? '';
+$hide_header = $hide_header ?? false;
 $flashes = get_flashes();
 $_role = function_exists('current_role') ? (current_role() ?? '') : '';
 ?>
@@ -15,7 +16,7 @@ $_role = function_exists('current_role') ? (current_role() ?? '') : '';
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= e($page_title) ?> &mdash; <?= e(APP_NAME) ?></title>
+  <title><?= e($page_title) ?> | <?= e(APP_NAME) ?></title>
   <link rel="icon" type="image/png" href="<?= APP_URL ?>/sksu1.png">
 
   <!-- Inter font -->
@@ -23,7 +24,7 @@ $_role = function_exists('current_role') ? (current_role() ?? '') : '';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind via CDN — Green & White theme (palette name 'crimson' kept for back-compat with existing classes, values are green) -->
+  <!-- Tailwind via CDN. Green & White theme (palette name 'crimson' kept for back-compat with existing classes, values are green) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -72,6 +73,7 @@ $_role = function_exists('current_role') ? (current_role() ?? '') : '';
 <body class="font-sans bg-ink-50 min-h-screen text-ink-800 antialiased <?= e($body_class) ?>">
 
 <!-- Top Navigation Bar -->
+<?php if (!$hide_header): ?>
 <header class="bg-white border-b border-ink-200 sticky top-0 z-30">
   <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
     <div class="flex items-center gap-3">
@@ -106,35 +108,12 @@ $_role = function_exists('current_role') ? (current_role() ?? '') : '';
     </div>
   </div>
 </header>
+<?php endif; ?>
 
-<!-- Toast Notifications (top-right, auto-dismiss) -->
+<!-- SweetAlert2 flash messages -->
 <?php if (!empty($flashes)): ?>
-<div id="toastStack" class="toast-stack" role="status" aria-live="polite">
-  <?php foreach ($flashes as $f):
-    $tone = $f['type'] ?? 'info';
-    $icon = $tone==='success'
-        ? '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
-        : ($tone==='error'
-        ? '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
-        : '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>');
-  ?>
-    <div class="toast toast-<?= e($tone) ?>" role="alert">
-      <div class="toast-icon"><?= $icon ?></div>
-      <div class="toast-message"><?= e($f['message']) ?></div>
-      <button type="button" class="toast-close" onclick="this.closest('.toast').classList.add('toast-dismissing'); setTimeout(()=>this.closest('.toast')?.remove(),250);" aria-label="Dismiss">&times;</button>
-      <div class="toast-progress"></div>
-    </div>
-  <?php endforeach; ?>
-</div>
 <script>
-(function() {
-  document.querySelectorAll('#toastStack .toast').forEach(function(t, i) {
-    setTimeout(function() {
-      t.classList.add('toast-dismissing');
-      setTimeout(function() { t.remove(); }, 250);
-    }, 5000 + i * 250);
-  });
-})();
+  window.AppFlashes = <?= json_encode($flashes, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 </script>
 <?php endif; ?>
 

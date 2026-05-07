@@ -43,7 +43,7 @@ include __DIR__ . '/../../templates/sidebar.php';
             <td class="pl-6 font-medium text-ink-800" data-label="Type"><?= e($r['requirement_type']) ?></td>
             <td class="text-ink-700" data-label="Title"><?= e($r['title']) ?></td>
             <td data-label="Status"><?= status_badge($r['status']) ?></td>
-            <td class="text-xs text-ink-500" data-label="Remarks"><?= e($r['remarks'] ?: '&mdash;') ?></td>
+            <td class="text-xs text-ink-500" data-label="Remarks"><?= e($r['remarks'] ?: '') ?></td>
             <td class="text-xs text-ink-500" data-label="Uploaded"><?= fmt_datetime($r['uploaded_at']) ?></td>
             <td class="pr-6 text-right" data-label="File">
               <a href="<?= APP_URL ?>/assets/<?= e($r['file_path']) ?>" target="_blank" class="text-xs font-semibold text-crimson-700 hover:bg-crimson-50 px-2 py-1 rounded-md">View</a>

@@ -13,14 +13,14 @@ if ((int)$payment['user_id'] !== current_user_id() && !in_array(current_role(), 
 ?>
 <!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8"><title>Receipt — <?= e($payment['reference_no']) ?></title>
+<meta charset="utf-8"><title>Receipt | <?= e($payment['reference_no']) ?></title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head><body class="bg-gray-100 p-8">
 <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl border-t-8 border-red-700 p-8 print:shadow-none print:border">
   <div class="flex justify-between items-start">
     <div>
       <div class="text-2xl font-bold text-red-700">SKSU Isulan Campus</div>
-      <div class="text-sm text-gray-500">Alumni Tracking System — Official Digital Receipt</div>
+      <div class="text-sm text-gray-500">Alumni Tracking System Official Digital Receipt</div>
     </div>
     <div class="text-right">
       <div class="text-xs text-gray-500">Reference</div>

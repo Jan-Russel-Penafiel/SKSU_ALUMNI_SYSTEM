@@ -47,9 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'Register';
+$hide_header = true;
 include __DIR__ . '/templates/header.php';
 ?>
-<main class="flex-1 flex items-center justify-center px-4 py-10">
+<main class="relative flex-1 flex items-center justify-center px-4 pt-20 pb-10">
+  <a href="<?= APP_URL ?>/index.php" class="btn-secondary absolute top-4 left-4">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to Home
+  </a>
   <div class="w-full max-w-2xl">
     <div class="bg-white rounded-2xl shadow-card border border-ink-200 p-8 relative overflow-hidden">
       <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-crimson-600 via-crimson-700 to-crimson-900"></div>

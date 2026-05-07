@@ -44,7 +44,7 @@ include __DIR__ . '/../../templates/sidebar.php';
             <td class="text-ink-600" data-label="Department"><?= e($r['department']) ?></td>
             <td class="text-ink-600" data-label="AY"><?= e($r['academic_year']) ?></td>
             <td class="text-ink-600" data-label="Graduation Date"><?= fmt_date($r['graduation_date']) ?></td>
-            <td class="pr-6 text-xs text-ink-600" data-label="Honors"><?= e($r['honors'] ?: '&mdash;') ?></td>
+            <td class="pr-6 text-xs text-ink-600" data-label="Honors"><?= e($r['honors'] ?: '') ?></td>
           </tr>
         <?php endforeach; ?>
         <?php if (empty($rows)): ?>

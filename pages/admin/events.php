@@ -45,7 +45,7 @@ include __DIR__ . '/../../templates/sidebar.php';
             <td class="text-ink-600" data-label="Time"><?= e($ev['event_time']) ?></td>
             <td class="text-ink-600" data-label="Location"><?= e($ev['location']) ?></td>
             <td class="text-ink-700 font-medium" data-label="Registered"><?= (int)$ev['registered'] ?></td>
-            <td class="text-ink-600" data-label="Capacity"><?= (int)$ev['capacity'] ?: '&mdash;' ?></td>
+            <td class="text-ink-600" data-label="Capacity"><?= (int)$ev['capacity'] ?: '' ?></td>
             <td data-label="Status"><?= status_badge($ev['status']) ?></td>
             <td class="pr-6 text-right" data-label="Actions">
               <a href="<?= APP_URL ?>/actions/admin_delete_event.php?id=<?= (int)$ev['id'] ?>"

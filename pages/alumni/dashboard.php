@@ -16,7 +16,7 @@ include __DIR__ . '/../../templates/sidebar.php';
   <div class="page-head">
     <div>
       <h1>Welcome back, <?= e($_SESSION['full_name']) ?></h1>
-      <p class="subtitle">Stay connected with your alma mater &mdash; SKSU Isulan.</p>
+      <p class="subtitle">Stay connected with your alma mater, SKSU Isulan.</p>
     </div>
     <a href="tracer.php" class="btn-primary">
       <?= icon('document','w-4 h-4') ?>
@@ -29,7 +29,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       <div class="flex items-start justify-between">
         <div>
           <div class="stat-label">Graduate ID</div>
-          <div class="stat-value font-mono text-[1.1rem]"><?= e($alumni['graduate_id'] ?? '—') ?></div>
+          <div class="stat-value font-mono text-[1.1rem]"><?= e($alumni['graduate_id'] ?? '') ?></div>
           <div class="stat-sub">Permanent record</div>
         </div>
         <div class="w-9 h-9 rounded-lg bg-crimson-50 text-crimson-700 border border-crimson-100 flex items-center justify-center"><?= icon('cap','w-[18px] h-[18px]') ?></div>
@@ -39,8 +39,8 @@ include __DIR__ . '/../../templates/sidebar.php';
       <div class="flex items-start justify-between">
         <div>
           <div class="stat-label">Course</div>
-          <div class="stat-value text-[1rem]"><?= e($alumni['course'] ?? '—') ?></div>
-          <div class="stat-sub"><?= e($alumni['department'] ?? '&mdash;') ?></div>
+          <div class="stat-value text-[1rem]"><?= e($alumni['course'] ?? '') ?></div>
+          <div class="stat-sub"><?= e($alumni['department'] ?? '') ?></div>
         </div>
         <div class="w-9 h-9 rounded-lg bg-ink-100 text-ink-600 flex items-center justify-center"><?= icon('briefcase','w-[18px] h-[18px]') ?></div>
       </div>

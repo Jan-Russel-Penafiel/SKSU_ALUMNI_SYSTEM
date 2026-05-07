@@ -44,8 +44,8 @@ include __DIR__ . '/../../templates/sidebar.php';
             <td class="pl-6 font-medium text-ink-800" data-label="Year"><?= e($r['report_year']) ?></td>
             <td class="text-ink-700" data-label="Quarter"><?= e($r['quarter']) ?></td>
             <td data-label="Status"><?= status_badge($r['employment_status']) ?></td>
-            <td class="text-ink-600" data-label="Company"><?= e($r['company_name'] ?: '&mdash;') ?></td>
-            <td class="text-ink-600" data-label="Job"><?= e($r['job_title'] ?: '&mdash;') ?></td>
+            <td class="text-ink-600" data-label="Company"><?= e($r['company_name'] ?: '') ?></td>
+            <td class="text-ink-600" data-label="Job"><?= e($r['job_title'] ?: '') ?></td>
             <td class="text-ink-600" data-label="Course-related"><?= e($r['related_to_course']) ?></td>
             <td class="pr-6 text-xs text-ink-500" data-label="Submitted"><?= fmt_datetime($r['submitted_at']) ?></td>
           </tr>

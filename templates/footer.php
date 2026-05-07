@@ -8,6 +8,7 @@
     toggle.addEventListener('click', () => sidebar.classList.toggle('hidden'));
   }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= APP_URL ?>/assets/js/app.js"></script>
 </body>
 </html>

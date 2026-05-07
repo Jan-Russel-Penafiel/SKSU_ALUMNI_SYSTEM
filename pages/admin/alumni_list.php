@@ -77,8 +77,8 @@ include __DIR__ . '/../../templates/sidebar.php';
             <td class="text-ink-700" data-label="Course"><?= e($r['course']) ?></td>
             <td class="text-ink-600" data-label="AY"><?= e($r['academic_year']) ?></td>
             <td data-label="Status"><?= status_badge($r['employment_status']) ?></td>
-            <td class="text-ink-600" data-label="Company"><?= e($r['company_name'] ?: '&mdash;') ?></td>
-            <td class="text-ink-600" data-label="Job"><?= e($r['job_title'] ?: '&mdash;') ?></td>
+            <td class="text-ink-600" data-label="Company"><?= e($r['company_name'] ?: '') ?></td>
+            <td class="text-ink-600" data-label="Job"><?= e($r['job_title'] ?: '') ?></td>
             <td class="pr-6 text-xs text-ink-500" data-label="Last Updated"><?= fmt_datetime($r['last_updated']) ?></td>
           </tr>
         <?php endforeach; ?>

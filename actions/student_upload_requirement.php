@@ -19,5 +19,5 @@ db_execute($conn,
     "INSERT INTO requirements (student_id, requirement_type, title, file_path) VALUES (?,?,?,?)",
     'isss', [$student['id'], $type, $title, $result]);
 
-flash('success', 'Requirement uploaded — pending registrar review.');
+flash('success', 'Requirement uploaded and pending registrar review.');
 redirect('pages/student/requirements.php');

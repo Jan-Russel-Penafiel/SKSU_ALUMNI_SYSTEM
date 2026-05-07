@@ -50,7 +50,7 @@ function send_xlsx(array $headers, array $rows, string $filename, string $sheetT
  * Format date to "Month d, Y"
  */
 function fmt_date($date) {
-    if (!$date) return '—';
+    if (!$date) return '';
     return date('M d, Y', strtotime($date));
 }
 
@@ -58,7 +58,7 @@ function fmt_date($date) {
  * Format datetime to "Month d, Y h:i A"
  */
 function fmt_datetime($datetime) {
-    if (!$datetime) return '—';
+    if (!$datetime) return '';
     return date('M d, Y h:i A', strtotime($datetime));
 }
 
@@ -203,7 +203,7 @@ function render_pagination(array $p): string {
     $items[] = $link(min($pages, $page + 1), '&raquo;', false, $page >= $pages);
 
     $summary = $total
-        ? 'Showing <strong>' . $from . '</strong>&ndash;<strong>' . $to . '</strong> of <strong>' . $total . '</strong>'
+        ? 'Showing <strong>' . $from . '</strong> to <strong>' . $to . '</strong> of <strong>' . $total . '</strong>'
         : 'No records';
 
     return '<div class="pagination">'

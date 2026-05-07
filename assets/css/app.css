@@ -1,5 +1,5 @@
 /* =============================================================
-   SKSU Alumni Tracking System — Custom UI on top of Tailwind
+   SKSU Alumni Tracking System Custom UI on top of Tailwind
    Green & White professional theme. (Tailwind palette key
    "crimson" is kept for backward compatibility but its values
    are green; do not rename throughout the codebase.)
@@ -53,7 +53,7 @@ body { color: var(--ink-800); background: var(--ink-50); line-height: 1.5; }
   box-shadow: 0 1px 2px rgba(15,23,42,0.05), 0 8px 24px rgba(15,23,42,0.06);
 }
 
-/* Stat card variant — used by stats grids on dashboards */
+/* Stat card variant used by stats grids on dashboards */
 .stat-card {
   background:#fff;
   border:1px solid var(--ink-200);
@@ -617,7 +617,7 @@ body.modal-open { overflow: hidden; }
   .card { padding: 1rem; }
 }
 
-/* Smaller phones (≤ 414px) — Pixel 5, iPhone SE, Galaxy S8+, etc. */
+/* Smaller phones (<= 414px) for Pixel 5, iPhone SE, Galaxy S8+, etc. */
 @media (max-width: 414px) {
   html { font-size: 14px; }
   .table-clean tbody td { padding: 0.5rem 0.7rem; gap: 0.6rem; }

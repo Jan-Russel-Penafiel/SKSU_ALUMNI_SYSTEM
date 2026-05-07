@@ -2,11 +2,68 @@
 // Client-side helpers
 // =============================================================
 document.addEventListener('DOMContentLoaded', function () {
+  const hasSwal = typeof window.Swal !== 'undefined';
+  const alertDefaults = {
+    confirmButtonColor: '#15803d',
+    cancelButtonColor: '#64748b',
+    buttonsStyling: true
+  };
+
+  function normalizeIcon(type) {
+    if (type === 'error' || type === 'warning' || type === 'info' || type === 'question') {
+      return type;
+    }
+    return type === 'success' ? 'success' : 'info';
+  }
+
+  function showFlashMessages() {
+    if (!hasSwal || !Array.isArray(window.AppFlashes) || !window.AppFlashes.length) return;
+
+    window.AppFlashes.reduce(function (chain, flash) {
+      return chain.then(function () {
+        const type = flash.type || 'info';
+        return window.Swal.fire(Object.assign({}, alertDefaults, {
+          icon: normalizeIcon(type),
+          title: type === 'success' ? 'Success' : (type === 'error' ? 'Error' : 'Notice'),
+          text: flash.message || '',
+          timer: type === 'success' ? 2600 : undefined,
+          timerProgressBar: type === 'success',
+          confirmButtonText: 'OK'
+        }));
+      });
+    }, Promise.resolve());
+  }
+
   // Confirm dangerous actions
   document.querySelectorAll('[data-confirm]').forEach(function (el) {
     el.addEventListener('click', function (e) {
       const message = el.getAttribute('data-confirm') || 'Are you sure?';
-      if (!window.confirm(message)) e.preventDefault();
+      if (!hasSwal) {
+        e.preventDefault();
+        return;
+      }
+
+      e.preventDefault();
+      window.Swal.fire(Object.assign({}, alertDefaults, {
+        title: 'Are you sure?',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: el.getAttribute('data-confirm-button') || 'Yes, continue',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        focusCancel: true
+      })).then(function (result) {
+        if (!result.isConfirmed) return;
+
+        if (el.tagName === 'A' && el.href) {
+          window.location.href = el.href;
+          return;
+        }
+
+        const form = el.closest('form');
+        if (form) form.submit();
+      });
     });
   });
 
@@ -91,4 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // expose for ad-hoc use
   window.AppModal = { open: openModal, close: function (id) { closeModal(document.getElementById(id)); } };
+
+  showFlashMessages();
 });

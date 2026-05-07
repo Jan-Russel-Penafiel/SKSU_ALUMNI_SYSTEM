@@ -22,18 +22,9 @@ include __DIR__ . '/../../templates/sidebar.php';
   <div class="page-head">
     <div>
       <h1>Administrator Dashboard</h1>
-      <p class="subtitle">System overview &mdash; users, graduates, alumni and engagement at a glance.</p>
+      <p class="subtitle">System overview of users, graduates, alumni and engagement at a glance.</p>
     </div>
-    <div class="flex items-center gap-2">
-      <a href="<?= APP_URL ?>/pages/admin/reports.php" class="btn-secondary">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        View reports
-      </a>
-      <a href="<?= APP_URL ?>/pages/admin/users.php" class="btn-primary">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        New user
-      </a>
-    </div>
+  
   </div>
 
   <?php

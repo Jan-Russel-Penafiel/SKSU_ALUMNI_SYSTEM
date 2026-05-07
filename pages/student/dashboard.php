@@ -69,7 +69,7 @@ include __DIR__ . '/../../templates/sidebar.php';
         <div>
           <div class="stat-label">Student ID</div>
           <div class="stat-value text-[1.25rem]"><?= e($student['student_id'] ?? 'N/A') ?></div>
-          <div class="stat-sub"><?= e($student['course'] ?? '&mdash;') ?></div>
+          <div class="stat-sub"><?= e($student['course'] ?? '') ?></div>
         </div>
         <div class="w-9 h-9 rounded-lg bg-ink-100 text-ink-600 flex items-center justify-center"><?= icon('cap','w-[18px] h-[18px]') ?></div>
       </div>

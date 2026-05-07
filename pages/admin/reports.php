@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../includes/helpers.php';
 require_role('admin');
 
 // =============================================================
-// Reports & Analytics — Employment, Population, Payments
+// Reports & Analytics for Employment, Population, Payments
 // =============================================================
 $total_grads  = db_count($conn,'graduates');
 $total_alumni = db_count($conn,'alumni');
