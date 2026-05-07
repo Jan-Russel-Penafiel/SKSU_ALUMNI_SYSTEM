@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -r \"var_dump\\(@mysqli_connect\\('localhost','root',''\\) !== false\\);\")",
+      "Bash(php -r ' *)",
+      "Bash(php -S 127.0.0.1:8765 -t c:/xampp/htdocs/alumni/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8765/login.php)",
+      "Bash(curl -s http://127.0.0.1:8765/login.php)",
+      "Bash(curl -s -o /dev/null -w \"index=%{http_code}\\\\n\" http://127.0.0.1:8765/index.php)",
+      "Bash(curl -s -o /dev/null -w \"register=%{http_code}\\\\n\" http://127.0.0.1:8765/register.php)",
+      "Bash(curl -s -o /dev/null -w \"logout=%{http_code}\\\\n\" http://127.0.0.1:8765/logout.php)",
+      "Bash(curl -s -o /dev/null -w \"student-dash\\(no-auth\\)=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/student/dashboard.php)",
+      "Bash(curl -s -c /tmp/jar -b /tmp/jar -L -d \"email=admin@sksu.edu.ph&password=Admin@123\" http://127.0.0.1:8765/login.php -o /tmp/page.html)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -c /tmp/jar -b /tmp/jar -L -X POST -d \"email=admin@sksu.edu.ph&password=Admin@123\" http://127.0.0.1:8765/login.php > /tmp/page.html *)",
+      "Bash(curl -s -c /tmp/jar -b /tmp/jar -i -X POST -d \"email=admin@sksu.edu.ph&password=Admin@123\" http://127.0.0.1:8765/login.php)",
+      "Bash(curl -s -b /tmp/jar -L http://127.0.0.1:8765/pages/admin/dashboard.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"users=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/admin/users.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"students=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/admin/students.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"alumni_list=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/admin/alumni_list.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"events=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/admin/events.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"reports=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/admin/reports.php)",
+      "Bash(curl -s -c /tmp/jar2 -b /tmp/jar2 -L -X POST -d \"email=registrar@sksu.edu.ph&password=Registrar@123\" http://127.0.0.1:8765/login.php)",
+      "Bash(curl -s -b /tmp/jar2 -o /dev/null -w \"registrar-dash=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/registrar/dashboard.php)",
+      "Bash(curl -s -b /tmp/jar2 -o /dev/null -w \"verify=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/registrar/verify.php)",
+      "Bash(curl -s -b /tmp/jar2 -o /dev/null -w \"graduates=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/registrar/graduates.php)",
+      "Bash(curl -s -b /tmp/jar2 -o /dev/null -w \"masterlist=%{http_code}\\\\n\" http://127.0.0.1:8765/pages/registrar/masterlist.php)",
+      "Bash(php -l templates/sidebar.php)",
+      "Bash(php -l includes/icons.php)",
+      "Bash(php -l includes/helpers.php)",
+      "Bash(php -l pages/student/dashboard.php)",
+      "Bash(php -l pages/alumni/dashboard.php)",
+      "Bash(curl -s -c /tmp/jar -b /tmp/jar -L -X POST -d \"email=admin@sksu.edu.ph&password=Admin@123\" http://127.0.0.1:8765/login.php)",
+      "Bash(curl -s -b /tmp/jar http://127.0.0.1:8765/pages/admin/dashboard.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"%{http_code}\\\\n\" http://127.0.0.1:8765/pages/admin/dashboard.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"users=%{http_code} \" http://127.0.0.1:8765/pages/admin/users.php)",
+      "Bash(curl -s -b /tmp/jar -o /dev/null -w \"reports=%{http_code} \" http://127.0.0.1:8765/pages/admin/reports.php)",
+      "Bash(curl -s http://127.0.0.1:8765/index.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/templates/header.php c:/xampp/htdocs/alumni/templates/sidebar.php c:/xampp/htdocs/alumni/templates/footer.php c:/xampp/htdocs/alumni/login.php c:/xampp/htdocs/alumni/register.php c:/xampp/htdocs/alumni/index.php c:/xampp/htdocs/alumni/pages/admin/dashboard.php c:/xampp/htdocs/alumni/pages/admin/users.php c:/xampp/htdocs/alumni/pages/student/dashboard.php c:/xampp/htdocs/alumni/pages/registrar/dashboard.php c:/xampp/htdocs/alumni/pages/alumni/dashboard.php c:/xampp/htdocs/alumni/includes/helpers.php)"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
+    ]
+  }
+}
