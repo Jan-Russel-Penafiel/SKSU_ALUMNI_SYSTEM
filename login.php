@@ -21,7 +21,7 @@ include __DIR__ . '/templates/header.php';
       <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-crimson-600 via-crimson-700 to-crimson-900"></div>
 
       <div class="flex items-center gap-3 mb-6">
-        <div class="bg-gradient-to-br from-crimson-600 to-crimson-800 text-white rounded-xl w-12 h-12 flex items-center justify-center font-extrabold text-base shadow-soft">SK</div>
+        <img src="<?= APP_URL ?>/sksu1.png" alt="SKSU" class="w-12 h-12 rounded-full object-contain bg-white ring-1 ring-ink-200 shadow-soft">
         <div>
           <h2 class="text-xl font-bold text-ink-900 tracking-tight">Welcome back</h2>
           <p class="text-xs text-ink-500">Sign in to <?= e(APP_NAME) ?></p>

@@ -322,6 +322,12 @@ select.input {
 
 /* When a paginated table has a pagination strip below it, drop the table-wrap's bottom rounding */
 .table-wrap.has-pagination { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: 0; }
+/* If pagination is hidden (fewer than 10 records), restore the bottom rounding/border */
+.table-wrap.has-pagination:not(:has(+ .pagination)) {
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  border-bottom: 1px solid var(--ink-200);
+}
 
 /* =========== Misc =========== */
 .divider { height:1px; background: var(--ink-200); margin: 1rem 0; }
@@ -424,9 +430,200 @@ select.input {
 
 body.modal-open { overflow: hidden; }
 
+/* =========== Toast notifications (bottom-left) =========== */
+.toast-stack {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 60;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.6rem;
+  width: min(360px, calc(100vw - 2rem));
+  pointer-events: none;
+}
+.toast {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.75rem 0.95rem 0.85rem;
+  background: #fff;
+  border: 1px solid var(--ink-200);
+  border-radius: 0.7rem;
+  box-shadow: 0 10px 25px -8px rgba(15,23,42,0.18), 0 4px 10px -2px rgba(15,23,42,0.08);
+  font-size: 0.82rem;
+  color: var(--ink-800);
+  overflow: hidden;
+  animation: toastIn .28s cubic-bezier(.2,.8,.2,1) both;
+}
+.toast.toast-dismissing {
+  animation: toastOut .25s cubic-bezier(.4,.0,.6,1) both;
+}
+.toast-icon { flex-shrink: 0; padding-top: 0.05rem; }
+.toast-message { flex: 1 1 auto; line-height: 1.35; }
+.toast-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--ink-400);
+  padding: 0 0.15rem;
+  transition: color .15s;
+}
+.toast-close:hover { color: var(--ink-700); }
+.toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.85;
+  transform-origin: left center;
+  animation: toastProgress 5s linear forwards;
+}
+.toast-success { border-left: 4px solid #059669; color: #065f46; }
+.toast-success .toast-icon { color: #059669; }
+.toast-success .toast-progress { background: #10b981; }
+.toast-error { border-left: 4px solid #dc2626; color: #991b1b; }
+.toast-error .toast-icon { color: #dc2626; }
+.toast-error .toast-progress { background: #ef4444; }
+.toast-info { border-left: 4px solid #2563eb; color: #1e3a8a; }
+.toast-info .toast-icon { color: #2563eb; }
+.toast-info .toast-progress { background: #3b82f6; }
+.toast .toast-message { color: var(--ink-800); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-120%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-120%); }
+}
+@keyframes toastProgress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+@media (max-width: 640px) {
+  .toast-stack {
+    bottom: 0.75rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+  }
+}
+
 /* Print-friendly */
 @media print {
   header, aside, .no-print { display: none !important; }
   body { background: #fff; }
   .card { box-shadow: none; border-color: #ddd; }
+}
+
+/* =========== Responsive: tables -> stacked cards on mobile =========== */
+@media (max-width: 768px) {
+  /* Containers no longer need horizontal scroll for stacked layout */
+  .table-wrap { overflow: visible !important; }
+  .table-wrap.has-pagination,
+  .table-wrap.has-pagination:not(:has(+ .pagination)) {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+  }
+
+  .table-clean { font-size: 0.82rem; }
+  .table-clean thead { display: none; }
+  .table-clean tbody, .table-clean tr, .table-clean td { display: block; width: 100%; }
+
+  .table-clean tbody tr {
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.7rem;
+    margin: 0.55rem;
+    padding: 0.35rem 0.1rem;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+  }
+  .table-clean tbody tr:hover td { background: transparent; }
+  .table-clean tbody tr:last-child td { border-bottom: 1px solid var(--ink-100); }
+
+  .table-clean tbody td {
+    border-bottom: 1px dashed var(--ink-100);
+    padding: 0.55rem 0.85rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.85rem;
+    text-align: right;
+    word-break: break-word;
+    min-height: 2.25rem;
+  }
+  .table-clean tbody td:last-child { border-bottom: none; }
+
+  .table-clean tbody td::before {
+    content: attr(data-label);
+    flex: 0 0 38%;
+    text-align: left;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--ink-500);
+    padding-top: 0.1rem;
+  }
+  /* Cells without a data-label fall back to a single column */
+  .table-clean tbody td:not([data-label]) { justify-content: flex-end; }
+  .table-clean tbody td:not([data-label])::before { display: none; }
+
+  /* Action cells: keep buttons aligned right and wrap nicely */
+  .table-clean tbody td[data-label="Actions"] > div,
+  .table-clean tbody td[data-label="Action"] > div {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+  }
+
+  /* Drop the row-spanning empty-state cell into a single line on mobile */
+  .table-clean tbody tr td .empty-state { padding: 1.25rem 0.75rem; }
+  .table-clean tbody tr:has(.empty-state) { padding: 0; }
+  .table-clean tbody tr:has(.empty-state) td { display: block; text-align: center; }
+  .table-clean tbody tr:has(.empty-state) td::before { display: none; }
+
+  /* Pagination becomes vertical/centered on mobile */
+  .pagination { flex-direction: column; gap: 0.6rem; align-items: stretch; }
+  .pagination .pg-summary { text-align: center; }
+  .pagination .pg-list { justify-content: center; flex-wrap: wrap; }
+
+  /* Page heading wraps naturally; primary actions go full width */
+  .page-head { flex-direction: column; align-items: stretch; }
+  .page-head > div:first-child { width: 100%; }
+  .page-head .btn-primary,
+  .page-head .btn-secondary,
+  .page-head > a,
+  .page-head > button { width: 100%; }
+  .page-head > .flex { flex-direction: column; align-items: stretch; }
+  .page-head > .flex > * { width: 100%; }
+
+  /* Modals: full-width on small screens */
+  .modal-backdrop { padding: 1rem; align-items: flex-start; }
+  .modal-panel, .modal-panel.modal-lg, .modal-panel.modal-sm { max-width: 100%; }
+  .modal-body.grid { grid-template-columns: 1fr !important; }
+
+  /* Card padding tightens on small screens */
+  .card { padding: 1rem; }
+}
+
+/* Smaller phones (≤ 414px) — Pixel 5, iPhone SE, Galaxy S8+, etc. */
+@media (max-width: 414px) {
+  html { font-size: 14px; }
+  .table-clean tbody td { padding: 0.5rem 0.7rem; gap: 0.6rem; }
+  .table-clean tbody td::before { flex-basis: 42%; font-size: 0.6rem; }
+  .table-clean tbody tr { margin: 0.45rem; }
+  .pagination { padding: 0.6rem 0.7rem; }
+  .pagination .pg-link { min-width: 1.7rem; height: 1.7rem; padding: 0 0.45rem; }
+  main.flex-1 { padding-left: 0.85rem !important; padding-right: 0.85rem !important; }
 }

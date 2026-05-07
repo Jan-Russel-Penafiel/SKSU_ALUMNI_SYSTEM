@@ -80,11 +80,11 @@ include __DIR__ . '/../../templates/sidebar.php';
         <tbody>
           <?php foreach ($recent as $r): ?>
             <tr>
-              <td class="pl-6 font-mono text-xs text-ink-600"><?= e($r['student_id']) ?></td>
-              <td class="font-medium text-ink-900"><?= e($r['full_name']) ?></td>
-              <td class="text-ink-600"><?= e($r['course']) ?></td>
-              <td><?= status_badge($r['status']) ?></td>
-              <td class="pr-6 text-xs text-ink-500"><?= fmt_datetime($r['created_at']) ?></td>
+              <td class="pl-6 font-mono text-xs text-ink-600" data-label="Student ID"><?= e($r['student_id']) ?></td>
+              <td class="font-medium text-ink-900" data-label="Name"><?= e($r['full_name']) ?></td>
+              <td class="text-ink-600" data-label="Course"><?= e($r['course']) ?></td>
+              <td data-label="Status"><?= status_badge($r['status']) ?></td>
+              <td class="pr-6 text-xs text-ink-500" data-label="Registered"><?= fmt_datetime($r['created_at']) ?></td>
             </tr>
           <?php endforeach; ?>
           <?php if (empty($recent)): ?>

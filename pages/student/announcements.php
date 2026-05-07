@@ -3,22 +3,45 @@ require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/helpers.php';
 require_role('student');
 
-$rows = db_select($conn, "SELECT * FROM announcements WHERE audience IN ('all','students') ORDER BY created_at DESC");
+$all_rows = db_select($conn, "SELECT * FROM announcements WHERE audience IN ('all','students') ORDER BY created_at DESC");
+$pg = paginate($all_rows, 8);
+$rows = $pg['rows'];
 
 $page_title = 'Announcements';
 include __DIR__ . '/../../templates/header.php';
 include __DIR__ . '/../../templates/sidebar.php';
 ?>
 <main class="flex-1 px-4 sm:px-6 py-8">
-  <h1 class="text-2xl font-bold text-gray-900">Announcements</h1>
-  <div class="mt-6 space-y-4">
+  <div class="page-head">
+    <div>
+      <h1>Announcements</h1>
+      <p class="subtitle">Updates from the institution and registrar's office.</p>
+    </div>
+  </div>
+
+  <div class="space-y-3">
     <?php foreach ($rows as $r): ?>
-      <div class="card border-l-4 border-crimson-700">
-        <div class="flex justify-between"><h3 class="font-bold text-gray-900"><?= e($r['title']) ?></h3><span class="text-xs text-gray-500"><?= fmt_datetime($r['created_at']) ?></span></div>
-        <p class="text-sm text-gray-600 mt-2 whitespace-pre-line"><?= e($r['body']) ?></p>
+      <div class="card relative">
+        <div class="absolute left-0 top-4 bottom-4 w-1 rounded-r-full bg-crimson-700"></div>
+        <div class="flex justify-between gap-4 pl-3">
+          <h3 class="font-bold text-ink-900"><?= e($r['title']) ?></h3>
+          <span class="text-xs text-ink-500 shrink-0"><?= fmt_datetime($r['created_at']) ?></span>
+        </div>
+        <p class="text-xs text-ink-700 mt-2 pl-3 whitespace-pre-line leading-relaxed"><?= e($r['body']) ?></p>
       </div>
     <?php endforeach; ?>
-    <?php if (empty($rows)): ?><div class="card text-center text-gray-400">No announcements.</div><?php endif; ?>
+    <?php if (empty($rows)): ?>
+      <div class="card empty-state">
+        <div class="empty-icon"><?= icon('megaphone','w-5 h-5') ?></div>
+        <div>No announcements yet.</div>
+      </div>
+    <?php endif; ?>
   </div>
+
+  <?php if (!empty($rows)): ?>
+    <div class="mt-4">
+      <?php $pg_html = render_pagination($pg); echo str_replace('class="pagination"', 'class="pagination is-standalone"', $pg_html); ?>
+    </div>
+  <?php endif; ?>
 </main>
 <?php include __DIR__ . '/../../templates/footer.php'; ?>

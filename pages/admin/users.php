@@ -12,7 +12,9 @@ if ($role_filter !== 'all') { $conds[] = 'role=?'; $types .= 's'; $params[] = $r
 if ($q) { $conds[] = '(full_name LIKE ? OR email LIKE ?)'; $types .= 'ss'; $params[] = "%$q%"; $params[] = "%$q%"; }
 $where = implode(' AND ', $conds);
 
-$rows = db_select($conn, "SELECT * FROM users WHERE $where ORDER BY id DESC", $types, $params);
+$all_rows = db_select($conn, "SELECT * FROM users WHERE $where ORDER BY id ASC", $types, $params);
+$pg = paginate($all_rows, 10);
+$rows = $pg['rows'];
 
 $page_title = 'User Management';
 include __DIR__ . '/../../templates/header.php';
@@ -47,7 +49,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     <div class="min-w-[160px]">
       <label class="label">Role</label>
       <select name="role" class="input">
-        <?php foreach (['all','student','registrar','alumni','admin'] as $r): ?>
+        <?php foreach (['registrar','admin'] as $r): ?>
           <option <?= $role_filter===$r?'selected':'' ?>><?= $r ?></option>
         <?php endforeach; ?>
       </select>
@@ -65,7 +67,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </div>
   </form>
 
-  <div class="mt-6 table-wrap overflow-x-auto">
+  <div class="mt-6 table-wrap has-pagination overflow-x-auto">
     <table class="table-clean">
       <thead>
         <tr>
@@ -100,13 +102,13 @@ include __DIR__ . '/../../templates/sidebar.php';
           ]);
         ?>
           <tr>
-            <td class="pl-6 font-mono text-xs text-ink-500"><?= (int)$u['id'] ?></td>
-            <td class="font-semibold text-ink-900"><?= e($u['full_name']) ?></td>
-            <td class="text-ink-600"><?= e($u['email']) ?></td>
-            <td><span class="badge <?= $rb ?> capitalize"><?= e($u['role']) ?></span></td>
-            <td><?= status_badge($u['status']) ?></td>
-            <td class="text-xs text-ink-500"><?= fmt_date($u['created_at']) ?></td>
-            <td class="pr-6 text-right">
+            <td class="pl-6 font-mono text-xs text-ink-500" data-label="ID"><?= (int)$u['id'] ?></td>
+            <td class="font-semibold text-ink-900" data-label="Name"><?= e($u['full_name']) ?></td>
+            <td class="text-ink-600" data-label="Email"><?= e($u['email']) ?></td>
+            <td data-label="Role"><span class="badge <?= $rb ?> capitalize"><?= e($u['role']) ?></span></td>
+            <td data-label="Status"><?= status_badge($u['status']) ?></td>
+            <td class="text-xs text-ink-500" data-label="Created"><?= fmt_date($u['created_at']) ?></td>
+            <td class="pr-6 text-right" data-label="Actions">
               <div class="inline-flex items-center gap-1">
                 <button type="button"
                         class="text-xs font-semibold text-sky-700 hover:bg-sky-50 px-2 py-1 rounded-md"
@@ -129,6 +131,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       </tbody>
     </table>
   </div>
+  <?= render_pagination($pg) ?>
 </main>
 
 <!-- User Create / Edit Modal -->
@@ -151,7 +154,7 @@ include __DIR__ . '/../../templates/sidebar.php';
         <div><label class="label">Email</label><input type="email" name="email" class="input" required></div>
         <div><label class="label">Role</label>
           <select name="role" class="input" required>
-            <?php foreach (['student','registrar','alumni','admin'] as $r): ?>
+            <?php foreach (['registrar','admin'] as $r): ?>
               <option value="<?= $r ?>"><?= ucfirst($r) ?></option>
             <?php endforeach; ?>
           </select>

@@ -36,79 +36,107 @@ include __DIR__ . '/../../templates/header.php';
 include __DIR__ . '/../../templates/sidebar.php';
 ?>
 <main class="flex-1 px-4 sm:px-6 py-8">
-  <h1 class="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
-  <p class="text-sm text-gray-500">Employment statistics, graduate population, and engagement.</p>
-
-  <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="card"><div class="text-xs text-gray-500">Total Graduates</div><div class="text-2xl font-bold text-crimson-700 mt-1"><?= $total_grads ?></div></div>
-    <div class="card"><div class="text-xs text-gray-500">Total Alumni</div><div class="text-2xl font-bold text-crimson-700 mt-1"><?= $total_alumni ?></div></div>
-    <div class="card"><div class="text-xs text-gray-500">Overall Employment Rate</div><div class="text-2xl font-bold text-emerald-600 mt-1"><?= $emp_rate ?>%</div></div>
-    <div class="card"><div class="text-xs text-gray-500">Employed / Self-Employed</div><div class="text-2xl font-bold text-emerald-600 mt-1"><?= $emp_employed + $emp_self ?></div></div>
+  <div class="page-head">
+    <div>
+      <h1>Reports &amp; Analytics</h1>
+      <p class="subtitle">Employment statistics, graduate population, and engagement.</p>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap">
+      <a href="<?= APP_URL ?>/actions/export_alumni.php" class="btn-secondary">
+        <?= icon('document','w-4 h-4') ?>
+        Export Alumni XLSX
+      </a>
+      <a href="<?= APP_URL ?>/actions/export_payments.php" class="btn-secondary">
+        <?= icon('cash','w-4 h-4') ?>
+        Export Payments XLSX
+      </a>
+      <a href="<?= APP_URL ?>/actions/export_tracer.php" class="btn-primary">
+        <?= icon('chart','w-4 h-4') ?>
+        Export Tracer XLSX
+      </a>
+    </div>
   </div>
 
-  <div class="mt-8 grid lg:grid-cols-2 gap-6">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="stat-card">
+      <div class="stat-label">Total Graduates</div>
+      <div class="stat-value"><?= $total_grads ?></div>
+      <div class="stat-sub">Issued Graduate IDs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Alumni</div>
+      <div class="stat-value"><?= $total_alumni ?></div>
+      <div class="stat-sub">Tracked records</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Overall Employment Rate</div>
+      <div class="stat-value text-emerald-700"><?= $emp_rate ?>%</div>
+      <div class="stat-sub">Employed + self-employed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Employed / Self-Employed</div>
+      <div class="stat-value text-emerald-700"><?= $emp_employed + $emp_self ?></div>
+      <div class="stat-sub">Active workforce</div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid lg:grid-cols-2 gap-4">
     <div class="card">
-      <h3 class="font-bold mb-3">Employment by Course</h3>
+      <h3 class="font-bold text-ink-900 mb-3">Employment by Course</h3>
       <table class="table-clean">
         <thead><tr><th>Course</th><th>Alumni</th><th>Employed</th><th>Rate</th></tr></thead>
         <tbody>
           <?php foreach ($by_course as $c): $rate = $c['total']?round($c['employed']/$c['total']*100,1):0; ?>
             <tr>
-              <td><?= e($c['course']) ?></td>
-              <td><?= (int)$c['total'] ?></td>
-              <td><?= (int)$c['employed'] ?></td>
-              <td><span class="font-semibold text-emerald-700"><?= $rate ?>%</span></td>
+              <td class="font-medium text-ink-800" data-label="Course"><?= e($c['course']) ?></td>
+              <td data-label="Alumni"><?= (int)$c['total'] ?></td>
+              <td data-label="Employed"><?= (int)$c['employed'] ?></td>
+              <td data-label="Rate"><span class="font-semibold text-emerald-700"><?= $rate ?>%</span></td>
             </tr>
           <?php endforeach; ?>
-          <?php if (empty($by_course)): ?><tr><td colspan="4" class="text-center text-gray-400 py-4">No data.</td></tr><?php endif; ?>
+          <?php if (empty($by_course)): ?><tr><td colspan="4" class="text-center text-ink-400 py-4">No data.</td></tr><?php endif; ?>
         </tbody>
       </table>
     </div>
 
     <div class="card">
-      <h3 class="font-bold mb-3">Graduate Population per Academic Year</h3>
+      <h3 class="font-bold text-ink-900 mb-3">Graduate Population per Academic Year</h3>
       <table class="table-clean">
         <thead><tr><th>Academic Year</th><th>Graduates</th></tr></thead>
         <tbody>
           <?php foreach ($by_year as $y): ?>
-            <tr><td><?= e($y['academic_year']) ?></td><td><?= (int)$y['total'] ?></td></tr>
+            <tr><td class="font-medium text-ink-800" data-label="Academic Year"><?= e($y['academic_year']) ?></td><td data-label="Graduates"><?= (int)$y['total'] ?></td></tr>
           <?php endforeach; ?>
-          <?php if (empty($by_year)): ?><tr><td colspan="2" class="text-center text-gray-400 py-4">No data.</td></tr><?php endif; ?>
+          <?php if (empty($by_year)): ?><tr><td colspan="2" class="text-center text-ink-400 py-4">No data.</td></tr><?php endif; ?>
         </tbody>
       </table>
     </div>
 
     <div class="card">
-      <h3 class="font-bold mb-3">Payment Records Summary</h3>
+      <h3 class="font-bold text-ink-900 mb-3">Payment Records Summary</h3>
       <table class="table-clean">
         <thead><tr><th>Type</th><th>Transactions</th><th>Total</th></tr></thead>
         <tbody>
           <?php foreach ($pay_by_type as $p): ?>
-            <tr><td><?= e($p['payment_type']) ?></td><td><?= (int)$p['cnt'] ?></td><td class="font-semibold"><?= fmt_money($p['total']) ?></td></tr>
+            <tr><td class="font-medium text-ink-800" data-label="Type"><?= e($p['payment_type']) ?></td><td data-label="Transactions"><?= (int)$p['cnt'] ?></td><td class="font-semibold text-ink-900" data-label="Total"><?= fmt_money($p['total']) ?></td></tr>
           <?php endforeach; ?>
-          <?php if (empty($pay_by_type)): ?><tr><td colspan="3" class="text-center text-gray-400 py-4">No payments.</td></tr><?php endif; ?>
+          <?php if (empty($pay_by_type)): ?><tr><td colspan="3" class="text-center text-ink-400 py-4">No payments.</td></tr><?php endif; ?>
         </tbody>
       </table>
     </div>
 
     <div class="card">
-      <h3 class="font-bold mb-3">Top Alumni Events Participation</h3>
+      <h3 class="font-bold text-ink-900 mb-3">Top Alumni Events Participation</h3>
       <table class="table-clean">
         <thead><tr><th>Event</th><th>Date</th><th>Registered</th></tr></thead>
         <tbody>
           <?php foreach ($top_events as $ev): ?>
-            <tr><td><?= e($ev['title']) ?></td><td><?= fmt_date($ev['event_date']) ?></td><td class="font-semibold"><?= (int)$ev['joined'] ?></td></tr>
+            <tr><td class="font-medium text-ink-800" data-label="Event"><?= e($ev['title']) ?></td><td data-label="Date"><?= fmt_date($ev['event_date']) ?></td><td class="font-semibold text-ink-900" data-label="Registered"><?= (int)$ev['joined'] ?></td></tr>
           <?php endforeach; ?>
-          <?php if (empty($top_events)): ?><tr><td colspan="3" class="text-center text-gray-400 py-4">No events.</td></tr><?php endif; ?>
+          <?php if (empty($top_events)): ?><tr><td colspan="3" class="text-center text-ink-400 py-4">No events.</td></tr><?php endif; ?>
         </tbody>
       </table>
     </div>
-  </div>
-
-  <div class="mt-6 flex gap-3 flex-wrap">
-    <a href="<?= APP_URL ?>/actions/export_alumni.php" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg">Export Alumni CSV</a>
-    <a href="<?= APP_URL ?>/actions/export_payments.php" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg">Export Payments CSV</a>
-    <a href="<?= APP_URL ?>/actions/export_tracer.php" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg">Export Tracer Reports CSV</a>
   </div>
 </main>
 <?php include __DIR__ . '/../../templates/footer.php'; ?>

@@ -54,9 +54,7 @@ include __DIR__ . '/templates/header.php';
     <div class="bg-white rounded-2xl shadow-card border border-ink-200 p-8 relative overflow-hidden">
       <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-crimson-600 via-crimson-700 to-crimson-900"></div>
       <div class="flex items-center gap-3 mb-1">
-        <div class="bg-gradient-to-br from-crimson-600 to-crimson-800 text-white rounded-xl w-11 h-11 flex items-center justify-center shadow-soft">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-        </div>
+        <img src="<?= APP_URL ?>/sksu1.png" alt="SKSU" class="w-11 h-11 rounded-full object-contain bg-white ring-1 ring-ink-200 shadow-soft">
         <div>
           <h2 class="text-xl font-bold text-ink-900 tracking-tight">Student Registration</h2>
           <p class="text-xs text-ink-500">For graduating students of SKSU Isulan Campus</p>

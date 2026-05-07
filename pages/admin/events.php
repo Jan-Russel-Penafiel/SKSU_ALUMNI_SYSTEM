@@ -3,7 +3,9 @@ require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/helpers.php';
 require_role('admin');
 
-$rows = db_select($conn, "SELECT e.*, (SELECT COUNT(*) FROM event_registrations er WHERE er.event_id=e.id) AS registered FROM events e ORDER BY event_date DESC");
+$all_rows = db_select($conn, "SELECT e.*, (SELECT COUNT(*) FROM event_registrations er WHERE er.event_id=e.id) AS registered FROM events e ORDER BY e.id ASC");
+$pg = paginate($all_rows, 10);
+$rows = $pg['rows'];
 
 $page_title = 'Events';
 include __DIR__ . '/../../templates/header.php';
@@ -21,7 +23,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </button>
   </div>
 
-  <div class="table-wrap overflow-x-auto">
+  <div class="table-wrap has-pagination overflow-x-auto">
     <table class="table-clean">
       <thead>
         <tr>
@@ -38,14 +40,14 @@ include __DIR__ . '/../../templates/sidebar.php';
       <tbody>
         <?php foreach ($rows as $ev): ?>
           <tr>
-            <td class="pl-6 font-semibold text-ink-900"><?= e($ev['title']) ?></td>
-            <td class="text-ink-700"><?= fmt_date($ev['event_date']) ?></td>
-            <td class="text-ink-600"><?= e($ev['event_time']) ?></td>
-            <td class="text-ink-600"><?= e($ev['location']) ?></td>
-            <td class="text-ink-700 font-medium"><?= (int)$ev['registered'] ?></td>
-            <td class="text-ink-600"><?= (int)$ev['capacity'] ?: '&mdash;' ?></td>
-            <td><?= status_badge($ev['status']) ?></td>
-            <td class="pr-6 text-right">
+            <td class="pl-6 font-semibold text-ink-900" data-label="Title"><?= e($ev['title']) ?></td>
+            <td class="text-ink-700" data-label="Date"><?= fmt_date($ev['event_date']) ?></td>
+            <td class="text-ink-600" data-label="Time"><?= e($ev['event_time']) ?></td>
+            <td class="text-ink-600" data-label="Location"><?= e($ev['location']) ?></td>
+            <td class="text-ink-700 font-medium" data-label="Registered"><?= (int)$ev['registered'] ?></td>
+            <td class="text-ink-600" data-label="Capacity"><?= (int)$ev['capacity'] ?: '&mdash;' ?></td>
+            <td data-label="Status"><?= status_badge($ev['status']) ?></td>
+            <td class="pr-6 text-right" data-label="Actions">
               <a href="<?= APP_URL ?>/actions/admin_delete_event.php?id=<?= (int)$ev['id'] ?>"
                  data-confirm="Delete this event?"
                  class="text-xs font-semibold text-rose-700 hover:bg-rose-50 px-2 py-1 rounded-md">Delete</a>
@@ -61,6 +63,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       </tbody>
     </table>
   </div>
+  <?= render_pagination($pg) ?>
 </main>
 
 <!-- New Event Modal -->

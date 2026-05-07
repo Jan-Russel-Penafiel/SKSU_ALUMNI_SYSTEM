@@ -4,7 +4,9 @@ require_once __DIR__ . '/../../includes/helpers.php';
 require_role('student');
 
 $uid = current_user_id();
-$payments = db_select($conn, "SELECT * FROM payments WHERE user_id=? ORDER BY paid_at DESC", 'i', [$uid]);
+$all_payments = db_select($conn, "SELECT * FROM payments WHERE user_id=? ORDER BY id ASC", 'i', [$uid]);
+$pg = paginate($all_payments, 10);
+$payments = $pg['rows'];
 $total = db_select_one($conn, "SELECT COALESCE(SUM(amount),0) AS s FROM payments WHERE user_id=? AND status='paid'", 'i', [$uid]);
 
 $page_title = 'Payments';
@@ -23,7 +25,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </button>
   </div>
 
-  <div class="table-wrap overflow-x-auto">
+  <div class="table-wrap has-pagination overflow-x-auto">
     <table class="table-clean">
       <thead>
         <tr>
@@ -39,13 +41,13 @@ include __DIR__ . '/../../templates/sidebar.php';
       <tbody>
         <?php foreach ($payments as $p): ?>
           <tr>
-            <td class="pl-6 font-medium text-ink-800"><?= e($p['payment_type']) ?></td>
-            <td class="font-semibold text-ink-900"><?= fmt_money($p['amount']) ?></td>
-            <td class="font-mono text-xs text-ink-600"><?= e($p['reference_no']) ?></td>
-            <td class="text-ink-600"><?= e($p['payment_method']) ?></td>
-            <td class="text-xs text-ink-500"><?= fmt_datetime($p['paid_at']) ?></td>
-            <td><?= status_badge($p['status']) ?></td>
-            <td class="pr-6 text-right">
+            <td class="pl-6 font-medium text-ink-800" data-label="Type"><?= e($p['payment_type']) ?></td>
+            <td class="font-semibold text-ink-900" data-label="Amount"><?= fmt_money($p['amount']) ?></td>
+            <td class="font-mono text-xs text-ink-600" data-label="Reference"><?= e($p['reference_no']) ?></td>
+            <td class="text-ink-600" data-label="Method"><?= e($p['payment_method']) ?></td>
+            <td class="text-xs text-ink-500" data-label="Date"><?= fmt_datetime($p['paid_at']) ?></td>
+            <td data-label="Status"><?= status_badge($p['status']) ?></td>
+            <td class="pr-6 text-right" data-label="Receipt">
               <a href="<?= APP_URL ?>/actions/receipt.php?id=<?= (int)$p['id'] ?>" target="_blank" class="text-xs font-semibold text-crimson-700 hover:bg-crimson-50 px-2 py-1 rounded-md">Receipt</a>
             </td>
           </tr>
@@ -59,6 +61,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       </tbody>
     </table>
   </div>
+  <?= render_pagination($pg) ?>
 </main>
 
 <!-- Record Payment Modal -->

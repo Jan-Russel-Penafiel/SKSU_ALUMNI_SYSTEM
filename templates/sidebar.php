@@ -43,15 +43,16 @@ if ($role === 'student') {
     ];
 }
 ?>
-<aside id="sidebar" class="hidden md:block w-64 shrink-0 self-start sticky top-16 z-20">
-  <div class="bg-white border-r border-ink-200 h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
-    <nav class="p-3 flex-1 overflow-hidden">
-      <div class="px-3 pt-2 pb-1.5 text-[10px] uppercase font-bold text-ink-400 tracking-[0.12em]">Navigation</div>
+<div class="hidden md:block w-64 shrink-0" aria-hidden="true"></div>
+<aside id="sidebar" class="hidden md:block w-64 fixed top-16 left-0 bottom-0 z-20" style="left: max(0px, calc((100vw - 1400px) / 2));">
+  <div class="bg-white border-r border-ink-200 h-full flex flex-col overflow-hidden">
+    <nav class="p-3 flex-1 overflow-hidden min-h-0">
+      <div class="px-3 pt-1 pb-1 text-[10px] uppercase font-bold text-ink-400 tracking-[0.12em]">Navigation</div>
       <div class="space-y-0.5">
         <?php foreach ($nav as [$label, $path, $iconName]):
             $active = strpos($_SERVER['PHP_SELF'], basename($path)) !== false; ?>
           <a href="<?= APP_URL . '/' . $path ?>"
-             class="group relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13.5px] font-medium transition <?= $active ? 'bg-crimson-50 text-crimson-800' : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' ?>">
+             class="group relative flex items-center gap-3 px-3 py-2 rounded-lg text-[12.5px] font-medium transition <?= $active ? 'bg-crimson-50 text-crimson-800' : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' ?>">
             <?php if ($active): ?>
               <span class="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-crimson-700"></span>
             <?php endif; ?>
@@ -64,12 +65,8 @@ if ($role === 'student') {
       </div>
     </nav>
 
-    <div class="px-4 pb-4 pt-3 border-t border-ink-100 shrink-0">
-      <div class="rounded-lg bg-gradient-to-br from-crimson-700 to-crimson-900 text-white p-3">
-        <div class="text-[10px] uppercase tracking-[0.1em] text-crimson-100 font-semibold">Need help?</div>
-        <div class="mt-0.5 text-xs font-semibold leading-snug">Contact the Registrar's Office for account or document concerns.</div>
-      </div>
-      <div class="text-[11px] text-ink-400 mt-3 text-center">v1.0 &middot; SKSU Isulan</div>
+    <div class="px-4 pb-3 pt-2 border-t border-ink-100 shrink-0">
+      <div class="text-[11px] text-ink-400 text-center">v1.0 &middot; SKSU Isulan</div>
     </div>
   </div>
 </aside>

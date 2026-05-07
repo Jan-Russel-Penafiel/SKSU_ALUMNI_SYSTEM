@@ -6,13 +6,9 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
 $page_title = $page_title ?? 'Dashboard';
+$body_class = $body_class ?? '';
 $flashes = get_flashes();
 $_role = function_exists('current_role') ? (current_role() ?? '') : '';
-$_initials = '';
-if (!empty($_SESSION['full_name'])) {
-    $parts = preg_split('/\s+/', trim($_SESSION['full_name']));
-    $_initials = strtoupper(substr($parts[0] ?? '', 0, 1) . substr($parts[count($parts)-1] ?? '', 0, 1));
-}
 ?>
 <!doctype html>
 <html lang="en">
@@ -73,7 +69,7 @@ if (!empty($_SESSION['full_name'])) {
   </script>
   <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/app.css">
 </head>
-<body class="font-sans bg-ink-50 min-h-screen text-ink-800 antialiased">
+<body class="font-sans bg-ink-50 min-h-screen text-ink-800 antialiased <?= e($body_class) ?>">
 
 <!-- Top Navigation Bar -->
 <header class="bg-white border-b border-ink-200 sticky top-0 z-30">
@@ -100,41 +96,46 @@ if (!empty($_SESSION['full_name'])) {
               <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 align-middle"></span><?= e($_role) ?>
             </div>
           </div>
-          <div class="w-9 h-9 rounded-full bg-crimson-50 text-crimson-700 border border-crimson-100 flex items-center justify-center font-bold text-[11px]"><?= e($_initials ?: 'U') ?></div>
+          <div class="w-9 h-9 rounded-full bg-crimson-50 text-crimson-700 border border-crimson-100 flex items-center justify-center"><?= icon('user','w-5 h-5') ?></div>
         </div>
         <a href="<?= APP_URL ?>/logout.php" class="inline-flex items-center gap-1.5 text-ink-700 hover:text-crimson-700 hover:bg-crimson-50 border border-ink-200 hover:border-crimson-200 px-3 py-1.5 rounded-md font-medium transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           <span>Logout</span>
         </a>
-      <?php else: ?>
-        <a href="<?= APP_URL ?>/login.php" class="text-ink-700 hover:text-crimson-700 px-3 py-1.5 rounded-md font-medium transition">Sign in</a>
-        <a href="<?= APP_URL ?>/register.php" class="bg-crimson-700 hover:bg-crimson-800 text-white px-4 py-1.5 rounded-md font-semibold shadow-soft transition">Register</a>
       <?php endif; ?>
     </div>
   </div>
 </header>
 
-<!-- Flash Messages -->
+<!-- Toast Notifications (top-right, auto-dismiss) -->
 <?php if (!empty($flashes)): ?>
-<div class="max-w-[1400px] mx-auto px-4 sm:px-6 mt-4 space-y-2">
+<div id="toastStack" class="toast-stack" role="status" aria-live="polite">
   <?php foreach ($flashes as $f):
     $tone = $f['type'] ?? 'info';
-    $cls = $tone==='success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-         : ($tone==='error' ? 'bg-rose-50 border-rose-200 text-rose-800'
-         : 'bg-sky-50 border-sky-200 text-sky-800');
     $icon = $tone==='success'
-        ? '<svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
+        ? '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
         : ($tone==='error'
-        ? '<svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
-        : '<svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>');
+        ? '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
+        : '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>');
   ?>
-    <div class="border <?= $cls ?> rounded-lg px-4 py-3 text-[13px] flex items-start gap-3 shadow-soft">
-      <?= $icon ?>
-      <span class="flex-1"><?= e($f['message']) ?></span>
-      <button onclick="this.parentElement.remove()" class="font-bold opacity-50 hover:opacity-100 leading-none text-lg" aria-label="Dismiss">&times;</button>
+    <div class="toast toast-<?= e($tone) ?>" role="alert">
+      <div class="toast-icon"><?= $icon ?></div>
+      <div class="toast-message"><?= e($f['message']) ?></div>
+      <button type="button" class="toast-close" onclick="this.closest('.toast').classList.add('toast-dismissing'); setTimeout(()=>this.closest('.toast')?.remove(),250);" aria-label="Dismiss">&times;</button>
+      <div class="toast-progress"></div>
     </div>
   <?php endforeach; ?>
 </div>
+<script>
+(function() {
+  document.querySelectorAll('#toastStack .toast').forEach(function(t, i) {
+    setTimeout(function() {
+      t.classList.add('toast-dismissing');
+      setTimeout(function() { t.remove(); }, 250);
+    }, 5000 + i * 250);
+  });
+})();
+</script>
 <?php endif; ?>
 
 <div class="flex max-w-[1400px] mx-auto">

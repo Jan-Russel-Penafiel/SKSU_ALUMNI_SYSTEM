@@ -3,6 +3,48 @@
 // General Helper Functions
 // =============================================================
 require_once __DIR__ . '/icons.php';
+$__autoload = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($__autoload)) require_once $__autoload;
+
+/**
+ * Stream rows as a real .xlsx download via PhpSpreadsheet.
+ * $headers: list of column header strings.
+ * $rows: list of row arrays (assoc or numeric).
+ * $filename: output filename (without extension).
+ * $sheetTitle: worksheet title (max 31 chars, no special chars).
+ */
+function send_xlsx(array $headers, array $rows, string $filename, string $sheetTitle = 'Sheet1'): void {
+    $ss = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $ss->getActiveSheet();
+    $safeTitle = preg_replace('/[\\\\\/\*\[\]\:\?]/', ' ', $sheetTitle);
+    $sheet->setTitle(mb_substr($safeTitle, 0, 31));
+
+    $colCount = count($headers);
+    $sheet->fromArray($headers, null, 'A1');
+    $headerRange = 'A1:' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colCount) . '1';
+    $sheet->getStyle($headerRange)->getFont()->setBold(true);
+    $sheet->getStyle($headerRange)->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setRGB('E2E8F0');
+    $sheet->freezePane('A2');
+
+    $r = 2;
+    foreach ($rows as $row) {
+        $sheet->fromArray(array_values($row), null, 'A' . $r);
+        $r++;
+    }
+    for ($i = 1; $i <= $colCount; $i++) {
+        $sheet->getColumnDimensionByColumn($i)->setAutoSize(true);
+    }
+
+    while (ob_get_level() > 0) ob_end_clean();
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '.xlsx"');
+    header('Cache-Control: max-age=0');
+    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($ss, 'Xlsx');
+    $writer->save('php://output');
+    exit;
+}
 
 /**
  * Format date to "Month d, Y"
@@ -99,4 +141,73 @@ function db_count($conn, $table, $where = '1', $types = '', $params = []) {
     $sql = "SELECT COUNT(*) AS cnt FROM {$table} WHERE {$where}";
     $row = db_select_one($conn, $sql, $types, $params);
     return (int)($row['cnt'] ?? 0);
+}
+
+/**
+ * Paginate an in-memory result set.
+ * Returns ['rows' => slice, 'page' => int, 'pages' => int, 'total' => int, 'per_page' => int, 'from' => int, 'to' => int]
+ */
+function paginate(array $rows, int $per_page = 10, string $param = 'page'): array {
+    $total = count($rows);
+    $pages = max(1, (int)ceil($total / max(1, $per_page)));
+    $page  = max(1, min($pages, (int)($_GET[$param] ?? 1)));
+    $start = ($page - 1) * $per_page;
+    $slice = array_slice($rows, $start, $per_page);
+    return [
+        'rows'     => $slice,
+        'page'     => $page,
+        'pages'    => $pages,
+        'total'    => $total,
+        'per_page' => $per_page,
+        'from'     => $total ? $start + 1 : 0,
+        'to'       => $start + count($slice),
+        'param'    => $param,
+    ];
+}
+
+/**
+ * Render the pagination strip for a paginate() result.
+ * Preserves existing query string, swapping only the page parameter.
+ * Hidden entirely when fewer than 10 records exist (single page of records).
+ */
+function render_pagination(array $p): string {
+    if (($p['total'] ?? 0) < 10) return '';
+    $page  = $p['page']; $pages = $p['pages']; $param = $p['param'];
+    $total = $p['total']; $from = $p['from']; $to = $p['to'];
+    $qs = $_GET; unset($qs[$param]);
+    $base = $_SERVER['PHP_SELF'] . '?' . http_build_query($qs);
+    if (substr($base, -1) !== '?' && substr($base, -1) !== '&' && !empty($qs)) $base .= '&';
+    if (empty($qs)) $base = $_SERVER['PHP_SELF'] . '?';
+    $link = function ($n, $label = null, $active = false, $disabled = false) use ($base, $param) {
+        $cls = 'pg-link' . ($active ? ' is-active' : '') . ($disabled ? ' is-disabled' : '');
+        $lbl = $label ?? (string)$n;
+        if ($disabled || $active) return '<span class="' . $cls . '">' . $lbl . '</span>';
+        return '<a class="' . $cls . '" href="' . e($base . $param . '=' . $n) . '">' . $lbl . '</a>';
+    };
+    $items = [];
+    $items[] = $link(max(1, $page - 1), '&laquo;', false, $page <= 1);
+    // build a windowed list
+    $window = 1;
+    $shown = [];
+    for ($i = 1; $i <= $pages; $i++) {
+        if ($i === 1 || $i === $pages || ($i >= $page - $window && $i <= $page + $window)) {
+            $shown[] = $i;
+        }
+    }
+    $prev = 0;
+    foreach ($shown as $i) {
+        if ($prev && $i - $prev > 1) $items[] = '<span class="pg-ellipsis">&hellip;</span>';
+        $items[] = $link($i, (string)$i, $i === $page);
+        $prev = $i;
+    }
+    $items[] = $link(min($pages, $page + 1), '&raquo;', false, $page >= $pages);
+
+    $summary = $total
+        ? 'Showing <strong>' . $from . '</strong>&ndash;<strong>' . $to . '</strong> of <strong>' . $total . '</strong>'
+        : 'No records';
+
+    return '<div class="pagination">'
+         . '<div class="pg-summary">' . $summary . '</div>'
+         . '<div class="pg-list">' . implode('', $items) . '</div>'
+         . '</div>';
 }

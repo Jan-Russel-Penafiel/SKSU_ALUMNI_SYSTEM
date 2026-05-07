@@ -5,7 +5,9 @@ require_role('student');
 
 $uid = current_user_id();
 $student = db_select_one($conn, "SELECT * FROM students WHERE user_id=?", 'i', [$uid]);
-$reqs = $student ? db_select($conn, "SELECT * FROM requirements WHERE student_id=? ORDER BY uploaded_at DESC", 'i', [$student['id']]) : [];
+$all_reqs = $student ? db_select($conn, "SELECT * FROM requirements WHERE student_id=? ORDER BY id ASC", 'i', [$student['id']]) : [];
+$pg = paginate($all_reqs, 10);
+$reqs = $pg['rows'];
 
 $page_title = 'Requirements';
 include __DIR__ . '/../../templates/header.php';
@@ -23,7 +25,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </button>
   </div>
 
-  <div class="table-wrap overflow-x-auto">
+  <div class="table-wrap has-pagination overflow-x-auto">
     <table class="table-clean">
       <thead>
         <tr>
@@ -38,12 +40,12 @@ include __DIR__ . '/../../templates/sidebar.php';
       <tbody>
         <?php foreach ($reqs as $r): ?>
           <tr>
-            <td class="pl-6 font-medium text-ink-800"><?= e($r['requirement_type']) ?></td>
-            <td class="text-ink-700"><?= e($r['title']) ?></td>
-            <td><?= status_badge($r['status']) ?></td>
-            <td class="text-xs text-ink-500"><?= e($r['remarks'] ?: '&mdash;') ?></td>
-            <td class="text-xs text-ink-500"><?= fmt_datetime($r['uploaded_at']) ?></td>
-            <td class="pr-6 text-right">
+            <td class="pl-6 font-medium text-ink-800" data-label="Type"><?= e($r['requirement_type']) ?></td>
+            <td class="text-ink-700" data-label="Title"><?= e($r['title']) ?></td>
+            <td data-label="Status"><?= status_badge($r['status']) ?></td>
+            <td class="text-xs text-ink-500" data-label="Remarks"><?= e($r['remarks'] ?: '&mdash;') ?></td>
+            <td class="text-xs text-ink-500" data-label="Uploaded"><?= fmt_datetime($r['uploaded_at']) ?></td>
+            <td class="pr-6 text-right" data-label="File">
               <a href="<?= APP_URL ?>/assets/<?= e($r['file_path']) ?>" target="_blank" class="text-xs font-semibold text-crimson-700 hover:bg-crimson-50 px-2 py-1 rounded-md">View</a>
             </td>
           </tr>
@@ -57,6 +59,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       </tbody>
     </table>
   </div>
+  <?= render_pagination($pg) ?>
 </main>
 
 <!-- Upload Requirement Modal -->

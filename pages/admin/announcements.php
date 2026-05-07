@@ -3,7 +3,9 @@ require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/helpers.php';
 require_role('admin');
 
-$rows = db_select($conn, "SELECT a.*, u.full_name FROM announcements a LEFT JOIN users u ON u.id=a.posted_by ORDER BY a.created_at DESC");
+$all_rows = db_select($conn, "SELECT a.*, u.full_name FROM announcements a LEFT JOIN users u ON u.id=a.posted_by ORDER BY a.id ASC");
+$pg = paginate($all_rows, 8);
+$rows = $pg['rows'];
 
 $page_title = 'Announcements';
 include __DIR__ . '/../../templates/header.php';
@@ -50,6 +52,12 @@ include __DIR__ . '/../../templates/sidebar.php';
       </div>
     <?php endif; ?>
   </div>
+
+  <?php if (!empty($rows)): ?>
+    <div class="mt-4">
+      <?php $pg_html = render_pagination($pg); echo str_replace('class="pagination"', 'class="pagination is-standalone"', $pg_html); ?>
+    </div>
+  <?php endif; ?>
 </main>
 
 <!-- New Announcement Modal -->

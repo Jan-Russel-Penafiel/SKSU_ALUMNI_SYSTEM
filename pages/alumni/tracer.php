@@ -5,7 +5,9 @@ require_role('alumni');
 
 $uid = current_user_id();
 $alumni = db_select_one($conn, "SELECT * FROM alumni WHERE user_id=?", 'i', [$uid]);
-$reports = $alumni ? db_select($conn, "SELECT * FROM tracer_reports WHERE alumni_id=? ORDER BY report_year DESC, quarter DESC", 'i', [$alumni['id']]) : [];
+$all_reports = $alumni ? db_select($conn, "SELECT * FROM tracer_reports WHERE alumni_id=? ORDER BY id ASC", 'i', [$alumni['id']]) : [];
+$pg = paginate($all_reports, 10);
+$reports = $pg['rows'];
 
 $page_title = 'Tracer Survey';
 include __DIR__ . '/../../templates/header.php';
@@ -23,7 +25,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </button>
   </div>
 
-  <div class="table-wrap overflow-x-auto">
+  <div class="table-wrap has-pagination overflow-x-auto">
     <table class="table-clean">
       <thead>
         <tr>
@@ -39,13 +41,13 @@ include __DIR__ . '/../../templates/sidebar.php';
       <tbody>
         <?php foreach ($reports as $r): ?>
           <tr>
-            <td class="pl-6 font-medium text-ink-800"><?= e($r['report_year']) ?></td>
-            <td class="text-ink-700"><?= e($r['quarter']) ?></td>
-            <td><?= status_badge($r['employment_status']) ?></td>
-            <td class="text-ink-600"><?= e($r['company_name'] ?: '&mdash;') ?></td>
-            <td class="text-ink-600"><?= e($r['job_title'] ?: '&mdash;') ?></td>
-            <td class="text-ink-600"><?= e($r['related_to_course']) ?></td>
-            <td class="pr-6 text-xs text-ink-500"><?= fmt_datetime($r['submitted_at']) ?></td>
+            <td class="pl-6 font-medium text-ink-800" data-label="Year"><?= e($r['report_year']) ?></td>
+            <td class="text-ink-700" data-label="Quarter"><?= e($r['quarter']) ?></td>
+            <td data-label="Status"><?= status_badge($r['employment_status']) ?></td>
+            <td class="text-ink-600" data-label="Company"><?= e($r['company_name'] ?: '&mdash;') ?></td>
+            <td class="text-ink-600" data-label="Job"><?= e($r['job_title'] ?: '&mdash;') ?></td>
+            <td class="text-ink-600" data-label="Course-related"><?= e($r['related_to_course']) ?></td>
+            <td class="pr-6 text-xs text-ink-500" data-label="Submitted"><?= fmt_datetime($r['submitted_at']) ?></td>
           </tr>
         <?php endforeach; ?>
         <?php if (empty($reports)): ?>
@@ -57,6 +59,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       </tbody>
     </table>
   </div>
+  <?= render_pagination($pg) ?>
 </main>
 
 <!-- Submit Tracer Modal -->

@@ -4,7 +4,9 @@ require_once __DIR__ . '/../../includes/helpers.php';
 require_role('student');
 
 $uid = current_user_id();
-$schedules = db_select($conn, "SELECT * FROM schedules WHERE user_id=? ORDER BY scheduled_date DESC, scheduled_time DESC", 'i', [$uid]);
+$all_schedules = db_select($conn, "SELECT * FROM schedules WHERE user_id=? ORDER BY id ASC", 'i', [$uid]);
+$pg = paginate($all_schedules, 10);
+$schedules = $pg['rows'];
 
 $page_title = 'My Schedules';
 include __DIR__ . '/../../templates/header.php';
@@ -22,7 +24,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </button>
   </div>
 
-  <div class="table-wrap overflow-x-auto">
+  <div class="table-wrap has-pagination overflow-x-auto">
     <table class="table-clean">
       <thead>
         <tr>
@@ -37,12 +39,12 @@ include __DIR__ . '/../../templates/sidebar.php';
       <tbody>
         <?php foreach ($schedules as $s): ?>
           <tr>
-            <td class="pl-6 font-medium text-ink-800"><?= e($s['schedule_type']) ?></td>
-            <td class="text-ink-700"><?= e($s['title']) ?></td>
-            <td class="text-ink-700"><?= fmt_date($s['scheduled_date']) ?></td>
-            <td class="text-ink-600"><?= e($s['scheduled_time']) ?></td>
-            <td class="text-ink-600"><?= e($s['location']) ?></td>
-            <td class="pr-6"><?= status_badge($s['status']) ?></td>
+            <td class="pl-6 font-medium text-ink-800" data-label="Type"><?= e($s['schedule_type']) ?></td>
+            <td class="text-ink-700" data-label="Title"><?= e($s['title']) ?></td>
+            <td class="text-ink-700" data-label="Date"><?= fmt_date($s['scheduled_date']) ?></td>
+            <td class="text-ink-600" data-label="Time"><?= e($s['scheduled_time']) ?></td>
+            <td class="text-ink-600" data-label="Location"><?= e($s['location']) ?></td>
+            <td class="pr-6" data-label="Status"><?= status_badge($s['status']) ?></td>
           </tr>
         <?php endforeach; ?>
         <?php if (empty($schedules)): ?>
@@ -54,6 +56,7 @@ include __DIR__ . '/../../templates/sidebar.php';
       </tbody>
     </table>
   </div>
+  <?= render_pagination($pg) ?>
 </main>
 
 <!-- Book Schedule Modal -->

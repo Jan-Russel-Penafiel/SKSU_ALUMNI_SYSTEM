@@ -1,5 +1,5 @@
 <?php
-// Masterlist CSV Export
+// Masterlist XLSX Export
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_role(['registrar','admin']);
@@ -17,11 +17,9 @@ $rows = db_select($conn, "SELECT g.graduate_id, u.full_name, u.email, g.course, 
     FROM graduates g JOIN students s ON s.id=g.student_id JOIN users u ON u.id=s.user_id
     WHERE $where ORDER BY g.course, u.full_name", $types, $params);
 
-header('Content-Type: text/csv; charset=utf-8');
-header('Content-Disposition: attachment; filename=graduate_masterlist_' . date('Ymd') . '.csv');
-$out = fopen('php://output', 'w');
-fputcsv($out, ['Graduate ID','Full Name','Email','Course','Department','Academic Year','Graduation Date','Honors']);
-foreach ($rows as $r) {
-    fputcsv($out, [$r['graduate_id'], $r['full_name'], $r['email'], $r['course'], $r['department'], $r['academic_year'], $r['graduation_date'], $r['honors']]);
-}
-fclose($out);
+send_xlsx(
+    ['Graduate ID','Full Name','Email','Course','Department','Academic Year','Graduation Date','Honors'],
+    $rows,
+    'graduate_masterlist_' . date('Ymd'),
+    'Masterlist'
+);

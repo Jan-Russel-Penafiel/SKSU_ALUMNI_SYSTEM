@@ -36,7 +36,22 @@
       "Bash(curl -s -b /tmp/jar -o /dev/null -w \"users=%{http_code} \" http://127.0.0.1:8765/pages/admin/users.php)",
       "Bash(curl -s -b /tmp/jar -o /dev/null -w \"reports=%{http_code} \" http://127.0.0.1:8765/pages/admin/reports.php)",
       "Bash(curl -s http://127.0.0.1:8765/index.php)",
-      "Bash(php -l c:/xampp/htdocs/alumni/templates/header.php c:/xampp/htdocs/alumni/templates/sidebar.php c:/xampp/htdocs/alumni/templates/footer.php c:/xampp/htdocs/alumni/login.php c:/xampp/htdocs/alumni/register.php c:/xampp/htdocs/alumni/index.php c:/xampp/htdocs/alumni/pages/admin/dashboard.php c:/xampp/htdocs/alumni/pages/admin/users.php c:/xampp/htdocs/alumni/pages/student/dashboard.php c:/xampp/htdocs/alumni/pages/registrar/dashboard.php c:/xampp/htdocs/alumni/pages/alumni/dashboard.php c:/xampp/htdocs/alumni/includes/helpers.php)"
+      "Bash(php -l c:/xampp/htdocs/alumni/templates/header.php c:/xampp/htdocs/alumni/templates/sidebar.php c:/xampp/htdocs/alumni/templates/footer.php c:/xampp/htdocs/alumni/login.php c:/xampp/htdocs/alumni/register.php c:/xampp/htdocs/alumni/index.php c:/xampp/htdocs/alumni/pages/admin/dashboard.php c:/xampp/htdocs/alumni/pages/admin/users.php c:/xampp/htdocs/alumni/pages/student/dashboard.php c:/xampp/htdocs/alumni/pages/registrar/dashboard.php c:/xampp/htdocs/alumni/pages/alumni/dashboard.php c:/xampp/htdocs/alumni/includes/helpers.php)",
+      "Bash(php -r \"echo extension_loaded\\('zip'\\) ? 'zip:OK' : 'zip:MISSING';\")",
+      "Bash(where composer *)",
+      "Bash(composer require *)",
+      "Bash(php -v)",
+      "Bash(php -l c:/xampp/htdocs/alumni/includes/helpers.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/actions/export_alumni.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/actions/export_payments.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/actions/export_tracer.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/actions/export_masterlist.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/__TRACKED_VAR__)",
+      "PowerShell($out = & php -r \"require 'includes/helpers.php'; send_xlsx\\(['A','B','C'],[[1,2,3],[4,5,6]],'smoketest','Test'\\);\" 2>&1; if \\($LASTEXITCODE -eq 0\\) { \"OK exit 0, output bytes: $\\($out.Length\\)\" } else { \"FAIL exit $LASTEXITCODE`n$out\" })",
+      "PowerShell($bytes = & php -r \"require 'includes/helpers.php'; send_xlsx\\(['A','B','C'],[[1,2,3],[4,5,6]],'smoketest','Test'\\);\" 2>&1 | Out-String; Write-Host \"Length: $\\($bytes.Length\\)\"; Write-Host \"First 4 chars \\(should be PK\\): $\\($bytes.Substring\\(0,[Math]::Min\\(4,$bytes.Length\\)\\)\\)\")",
+      "Bash(php -l c:/xampp/htdocs/alumni/index.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/templates/header.php)",
+      "Bash(php -l c:/xampp/htdocs/alumni/templates/sidebar.php)"
     ],
     "additionalDirectories": [
       "\\tmp"
