@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2026 at 04:07 AM
+-- Generation Time: May 11, 2026 at 01:06 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -133,7 +133,7 @@ CREATE TABLE `graduates` (
 --
 
 INSERT INTO `graduates` (`id`, `student_id`, `graduate_id`, `course`, `department`, `academic_year`, `graduation_date`, `honors`, `approved_by`, `approved_at`) VALUES
-(2, 2, 'GRAD-2026-21032', 'Bachelor of Science in Information Technology (BSIT)', 'CCS', '2025-2026', '2026-05-01', NULL, 2, '2026-05-07 15:38:53');
+(2, 2, 'GRAD-2026-21032', 'BS Information Technology', 'CCS', '2025-2026', '2026-05-01', NULL, 2, '2026-05-07 15:38:53');
 
 -- --------------------------------------------------------
 
@@ -148,10 +148,17 @@ CREATE TABLE `payments` (
   `amount` decimal(10,2) NOT NULL,
   `reference_no` varchar(50) NOT NULL,
   `payment_method` enum('Cash','GCash','Bank Transfer') DEFAULT 'Cash',
-  `status` enum('pending','paid','rejected','refunded') DEFAULT 'pending',
+  `status` enum('paid','pending','refunded') DEFAULT 'paid',
   `remarks` text DEFAULT NULL,
-  `paid_at` datetime DEFAULT NULL
+  `paid_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `user_id`, `payment_type`, `amount`, `reference_no`, `payment_method`, `status`, `remarks`, `paid_at`) VALUES
+(1, 10, 'Yearbook Fee', 2000.00, 'REF-20260511182726-551', 'Cash', 'pending', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -222,7 +229,8 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `user_id`, `student_id`, `course`, `year_level`, `department`, `academic_year`, `expected_graduation`, `status`, `created_at`) VALUES
-(2, 6, '29154', 'Bachelor of Science in Information Technology (BSIT)', '1st', 'CCS', '2025-2026', '2026-05-01', 'approved', '2026-05-07 15:36:17');
+(2, 6, '29154', 'BS Information Technology', '1st', 'CCS', '2025-2026', '2026-05-01', 'approved', '2026-05-07 15:36:17'),
+(3, 10, '291596', 'Bachelor of Science in Information Technology (BSIT)', '3rd', 'CCS', '2025-2026', '2026-05-04', 'pending', '2026-05-11 18:26:47');
 
 -- --------------------------------------------------------
 
@@ -269,7 +277,8 @@ INSERT INTO `users` (`id`, `full_name`, `email`, `password`, `role`, `contact`, 
 (1, 'System Administrator', 'admin@sksu.edu.ph', '$2y$10$JP.7iijlSNU27kVWVrARFunS0s7wMfB.ciV51p9rOOyufUkXCK8Pq', 'admin', '09171234567', 'SKSU Isulan', 'active', '2026-05-07 10:21:41'),
 (2, 'Registrar Officer', 'registrar@sksu.edu.ph', '$2y$10$zLq3AUZrR2VnNIMC8.m8o.qAAa6egh2irvMDHEyY1wqdsoOZppV0a', 'registrar', '09181234567', 'SKSU Isulan', 'active', '2026-05-07 10:21:41'),
 (6, 'Jan Russel Elizares Penafiel', 'janrusselpenafiel@sksu.edu.ph', '$2y$10$pJVAK1YUG18qfxTQK68oxezFeblGvOQcg8IedwvGa38KsKoUoN3Mm', 'alumni', '09171234567', 'Purok Paghidaet 1&2 Panay Santo Niño South Cotabato', 'active', '2026-05-07 15:36:17'),
-(9, 'Jan Russel Elizares Penafiel', 'janrusselpenafie11l@sksu.edu.ph', '$2y$10$KW1DwPtVjy.3Pb8maY4aKuylzH7irNg42mLIYo8DjacpIK5oGrCc6', 'admin', '09171234567', 'Purok Paghidaet 1&2 Panay Santo Niño South Cotabato', 'active', '2026-05-07 16:07:44');
+(9, 'Jan Russel Elizares Penafiel', 'janrusselpenafie11l@sksu.edu.ph', '$2y$10$KW1DwPtVjy.3Pb8maY4aKuylzH7irNg42mLIYo8DjacpIK5oGrCc6', 'admin', '09171234567', 'Purok Paghidaet 1&2 Panay Santo Niño South Cotabato', 'active', '2026-05-07 16:07:44'),
+(10, 'Jan Russel Elizares Penafiel123', 'janrusselpenafiel2424@sksu.edu.ph', '$2y$10$iFP7eeiKYICMdbPsumFP3uwbbr6YeTCCaV4mGqQfHxWfAollLsuLe', 'student', '09171234567', 'Purok Paghidaet 1&2 Panay Santo Niño South Cotabato', 'active', '2026-05-11 18:26:47');
 
 --
 -- Indexes for dumped tables
@@ -397,7 +406,7 @@ ALTER TABLE `graduates`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `requirements`
@@ -415,7 +424,7 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tracer_reports`
@@ -427,7 +436,7 @@ ALTER TABLE `tracer_reports`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
