@@ -17,11 +17,11 @@ include __DIR__ . '/../../templates/sidebar.php';
   <div class="page-head">
     <div>
       <h1>Payment Records</h1>
-      <p class="subtitle">Total paid: <span class="font-bold text-emerald-700"><?= fmt_money($total['s']) ?></span></p>
+      <p class="subtitle">Approved total paid: <span class="font-bold text-emerald-700"><?= fmt_money($total['s']) ?></span></p>
     </div>
     <button type="button" class="btn-primary" data-modal-open="paymentModal">
       <?= icon('cash','w-4 h-4') ?>
-      Record payment
+      Submit payment
     </button>
   </div>
 
@@ -45,10 +45,14 @@ include __DIR__ . '/../../templates/sidebar.php';
             <td class="font-semibold text-ink-900" data-label="Amount"><?= fmt_money($p['amount']) ?></td>
             <td class="font-mono text-xs text-ink-600" data-label="Reference"><?= e($p['reference_no']) ?></td>
             <td class="text-ink-600" data-label="Method"><?= e($p['payment_method']) ?></td>
-            <td class="text-xs text-ink-500" data-label="Date"><?= fmt_datetime($p['paid_at']) ?></td>
+            <td class="text-xs text-ink-500" data-label="Date"><?= $p['paid_at'] ? fmt_datetime($p['paid_at']) : ($p['status'] === 'pending' ? 'Pending review' : 'Not approved') ?></td>
             <td data-label="Status"><?= status_badge($p['status']) ?></td>
             <td class="pr-6 text-right" data-label="Receipt">
-              <a href="<?= APP_URL ?>/actions/receipt.php?id=<?= (int)$p['id'] ?>" target="_blank" class="text-xs font-semibold text-crimson-700 hover:bg-crimson-50 px-2 py-1 rounded-md">Receipt</a>
+              <?php if ($p['status'] === 'paid'): ?>
+                <a href="<?= APP_URL ?>/actions/receipt.php?id=<?= (int)$p['id'] ?>" target="_blank" class="text-xs font-semibold text-crimson-700 hover:bg-crimson-50 px-2 py-1 rounded-md">Receipt</a>
+              <?php else: ?>
+                <span class="text-xs text-ink-400">Unavailable</span>
+              <?php endif; ?>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -64,13 +68,13 @@ include __DIR__ . '/../../templates/sidebar.php';
   <?= render_pagination($pg) ?>
 </main>
 
-<!-- Record Payment Modal -->
+<!-- Submit Payment Modal -->
 <div id="paymentModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle">
   <div class="modal-panel" role="document">
     <div class="modal-head">
       <div>
-        <h3 id="paymentModalTitle">Record payment</h3>
-        <div class="modal-sub">A reference number will be generated automatically.</div>
+        <h3 id="paymentModalTitle">Submit payment</h3>
+        <div class="modal-sub">A reference number will be generated automatically and sent for registrar review.</div>
       </div>
       <button type="button" class="modal-close" data-modal-close aria-label="Close">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -81,18 +85,17 @@ include __DIR__ . '/../../templates/sidebar.php';
       <div class="modal-body grid sm:grid-cols-2 gap-4">
         <div><label class="label">Type</label>
           <select name="payment_type" class="input" required>
-            <option>Yearbook Fee</option>
-            <option>Graduation Fee</option>
-            <option>Donation</option>
-            <option>Other</option>
+            <?php foreach (app_payment_type_options() as $paymentType): ?>
+              <option value="<?= e($paymentType) ?>"><?= e($paymentType) ?></option>
+            <?php endforeach; ?>
           </select>
         </div>
         <div><label class="label">Amount (&#8369;)</label><input type="number" step="0.01" name="amount" class="input" required></div>
         <div class="sm:col-span-2"><label class="label">Payment method</label>
           <select name="payment_method" class="input">
-            <option>Cash</option>
-            <option>GCash</option>
-            <option>Bank Transfer</option>
+            <?php foreach (app_payment_method_options() as $paymentMethod): ?>
+              <option value="<?= e($paymentMethod) ?>"><?= e($paymentMethod) ?></option>
+            <?php endforeach; ?>
           </select>
         </div>
         <div class="sm:col-span-2"><label class="label">Remarks</label><textarea name="remarks" class="input" rows="3"></textarea></div>
@@ -101,7 +104,7 @@ include __DIR__ . '/../../templates/sidebar.php';
         <button type="button" class="btn-secondary" data-modal-close>Cancel</button>
         <button type="submit" class="btn-primary">
           <?= icon('cash','w-4 h-4') ?>
-          Submit payment
+          Submit for review
         </button>
       </div>
     </form>

@@ -18,9 +18,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password   = $_POST['password'] ?? '';
     $password2  = $_POST['password2'] ?? '';
 
+    $course_options = app_course_options();
+    $department_options = app_department_options();
+
     $errors = [];
+    if (!csrf_check($_POST['csrf'] ?? '')) {
+        $errors[] = 'Invalid form token.';
+    }
     if (!$full_name || !$email || !$student_id || !$course || !$year_level || !$password) {
         $errors[] = 'All required fields must be filled.';
+    }
+    if ($course && !app_is_valid_option($course, $course_options)) {
+        $errors[] = 'Please select a valid course.';
+    }
+    if ($department !== '' && !app_is_valid_option($department, $department_options)) {
+        $errors[] = 'Please select a valid department.';
     }
     if ($password !== $password2) $errors[] = 'Passwords do not match.';
     if (strlen($password) < 6) $errors[] = 'Password must be at least 6 characters.';
@@ -66,6 +78,10 @@ include __DIR__ . '/templates/header.php';
         </div>
       </div>
       <div class="my-5 h-px bg-ink-200"></div>
+      <?php
+        $selectedCourse = $_POST['course'] ?? '';
+        $selectedDepartment = $_POST['department'] ?? '';
+      ?>
       <form method="post" class="grid sm:grid-cols-2 gap-4">
         <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
         <div class="sm:col-span-2"><label class="label">Full name *</label><input type="text" name="full_name" class="input" required></div>
@@ -76,14 +92,13 @@ include __DIR__ . '/templates/header.php';
         <div><label class="label">Course *</label>
           <select name="course" class="input" required>
             <option value="">Select course</option>
-            <option>BS Information Technology</option>
-            <option>BS Computer Science</option>
-            <option>BS Business Administration</option>
-            <option>BS Education</option>
-            <option>BS Agriculture</option>
-            <option>BS Criminology</option>
-            <option>BS Nursing</option>
-            <option>BS Engineering</option>
+            <?php foreach (app_course_groups() as $group => $courses): ?>
+              <optgroup label="<?= e($group) ?>">
+                <?php foreach ($courses as $courseOption): ?>
+                  <option value="<?= e($courseOption) ?>" <?= $selectedCourse === $courseOption ? 'selected' : '' ?>><?= e($courseOption) ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            <?php endforeach; ?>
           </select>
         </div>
         <div><label class="label">Year Level *</label>
@@ -91,7 +106,14 @@ include __DIR__ . '/templates/header.php';
             <option value="">Select</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option>
           </select>
         </div>
-        <div><label class="label">Department</label><input type="text" name="department" class="input" placeholder="e.g. CCS"></div>
+        <div><label class="label">Department</label>
+          <select name="department" class="input">
+            <option value="">Select department</option>
+            <?php foreach (app_department_options() as $departmentOption): ?>
+              <option value="<?= e($departmentOption) ?>" <?= $selectedDepartment === $departmentOption ? 'selected' : '' ?>><?= e($departmentOption) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
         <div><label class="label">Academic Year</label><input type="text" name="academic_year" class="input" placeholder="2025-2026"></div>
         <div><label class="label">Expected Graduation</label><input type="date" name="expected_graduation" class="input"></div>
         <div><label class="label">Password *</label><input type="password" name="password" class="input" required minlength="6"></div>

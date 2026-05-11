@@ -6,6 +6,7 @@ require_role(['registrar','admin']);
 $pending_students = db_count($conn, 'students', "status='pending'");
 $approved_students = db_count($conn, 'students', "status='approved'");
 $pending_reqs = db_count($conn, 'requirements', "status='pending'");
+$pending_payments = db_count($conn, 'payments', "status='pending'");
 $total_grads = db_count($conn, 'graduates');
 
 $recent = db_select($conn, "SELECT s.*, u.full_name, u.email FROM students s JOIN users u ON u.id=s.user_id ORDER BY s.created_at DESC LIMIT 10");
@@ -21,6 +22,10 @@ include __DIR__ . '/../../templates/sidebar.php';
       <p class="subtitle">Verify and validate student records and graduation requirements.</p>
     </div>
     <div class="flex gap-2">
+      <a href="payments.php" class="btn-secondary">
+        <?= icon('cash','w-4 h-4') ?>
+        Review payments
+      </a>
       <a href="verify.php" class="btn-primary">
         <?= icon('check-circle','w-4 h-4') ?>
         Verify students
@@ -33,6 +38,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     ['Pending Students',     $pending_students,  'user',         'amber',   'Awaiting review'],
     ['Approved Students',    $approved_students, 'check-circle', 'emerald', 'Validated graduates'],
     ['Pending Requirements', $pending_reqs,      'folder',       'amber',   'Documents to review'],
+    ['Pending Payments',     $pending_payments,  'cash',         'amber',   'Payments to approve'],
     ['Total Graduates',      $total_grads,       'cap',          'crimson', 'Issued Graduate IDs'],
   ];
   $tones = [

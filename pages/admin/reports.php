@@ -46,10 +46,6 @@ include __DIR__ . '/../../templates/sidebar.php';
         <?= icon('document','w-4 h-4') ?>
         Export Alumni XLSX
       </a>
-      <a href="<?= APP_URL ?>/actions/export_payments.php" class="btn-secondary">
-        <?= icon('cash','w-4 h-4') ?>
-        Export Payments XLSX
-      </a>
       <a href="<?= APP_URL ?>/actions/export_tracer.php" class="btn-primary">
         <?= icon('chart','w-4 h-4') ?>
         Export Tracer XLSX

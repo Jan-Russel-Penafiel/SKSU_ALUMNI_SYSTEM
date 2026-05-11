@@ -10,6 +10,9 @@ if (!$payment) { http_response_code(404); die('Receipt not found.'); }
 if ((int)$payment['user_id'] !== current_user_id() && !in_array(current_role(), ['admin','registrar'], true)) {
     http_response_code(403); die('Forbidden.');
 }
+if ($payment['status'] !== 'paid') {
+    http_response_code(409); die('Receipt is available only after registrar approval.');
+}
 ?>
 <!doctype html>
 <html lang="en"><head>

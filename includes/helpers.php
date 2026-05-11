@@ -3,6 +3,7 @@
 // General Helper Functions
 // =============================================================
 require_once __DIR__ . '/icons.php';
+require_once __DIR__ . '/options.php';
 $__autoload = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($__autoload)) require_once $__autoload;
 

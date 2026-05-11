@@ -7,6 +7,9 @@ $course = $_GET['course'] ?? '';
 $year   = $_GET['year'] ?? '';
 $dept   = $_GET['dept'] ?? '';
 
+if ($course !== '' && !app_is_valid_option($course, app_course_options())) $course = '';
+if ($dept !== '' && !app_is_valid_option($dept, app_department_options())) $dept = '';
+
 $conds = ['1'];
 $types = '';
 $params = [];
@@ -22,9 +25,9 @@ $all_rows = db_select($conn,
 $pg = paginate($all_rows, 15);
 $rows = $pg['rows'];
 
-$courses = db_select($conn, "SELECT DISTINCT course FROM graduates WHERE course IS NOT NULL ORDER BY course");
+$courses = app_course_options();
 $years   = db_select($conn, "SELECT DISTINCT academic_year FROM graduates WHERE academic_year IS NOT NULL ORDER BY academic_year DESC");
-$depts   = db_select($conn, "SELECT DISTINCT department FROM graduates WHERE department IS NOT NULL ORDER BY department");
+$depts   = app_department_options();
 
 $page_title = 'Graduate Masterlist';
 include __DIR__ . '/../../templates/header.php';
@@ -45,7 +48,7 @@ include __DIR__ . '/../../templates/sidebar.php';
   <form class="card grid sm:grid-cols-4 gap-3 mb-6 items-end">
     <div><label class="label">Course</label>
       <select name="course" class="input"><option value="">All</option>
-        <?php foreach ($courses as $c): ?><option <?= $course===$c['course']?'selected':'' ?>><?= e($c['course']) ?></option><?php endforeach; ?>
+        <?php foreach ($courses as $courseOption): ?><option value="<?= e($courseOption) ?>" <?= $course===$courseOption?'selected':'' ?>><?= e($courseOption) ?></option><?php endforeach; ?>
       </select>
     </div>
     <div><label class="label">Academic Year</label>
@@ -55,7 +58,7 @@ include __DIR__ . '/../../templates/sidebar.php';
     </div>
     <div><label class="label">Department</label>
       <select name="dept" class="input"><option value="">All</option>
-        <?php foreach ($depts as $d): ?><option <?= $dept===$d['department']?'selected':'' ?>><?= e($d['department']) ?></option><?php endforeach; ?>
+        <?php foreach ($depts as $departmentOption): ?><option value="<?= e($departmentOption) ?>" <?= $dept===$departmentOption?'selected':'' ?>><?= e($departmentOption) ?></option><?php endforeach; ?>
       </select>
     </div>
     <div class="flex gap-2">

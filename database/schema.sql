@@ -82,9 +82,9 @@ CREATE TABLE payments (
     amount DECIMAL(10,2) NOT NULL,
     reference_no VARCHAR(50) UNIQUE NOT NULL,
     payment_method ENUM('Cash','GCash','Bank Transfer') DEFAULT 'Cash',
-    status ENUM('paid','pending','refunded') DEFAULT 'paid',
+    status ENUM('pending','paid','rejected','refunded') DEFAULT 'pending',
     remarks TEXT,
-    paid_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    paid_at DATETIME DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

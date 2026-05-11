@@ -7,6 +7,10 @@ require_role(['registrar','admin']);
 $course = $_GET['course'] ?? '';
 $year   = $_GET['year'] ?? '';
 $dept   = $_GET['dept'] ?? '';
+
+if ($course !== '' && !app_is_valid_option($course, app_course_options())) $course = '';
+if ($dept !== '' && !app_is_valid_option($dept, app_department_options())) $dept = '';
+
 $conds = ['1']; $types=''; $params=[];
 if ($course) { $conds[]='g.course=?'; $types.='s'; $params[]=$course; }
 if ($year)   { $conds[]='g.academic_year=?'; $types.='s'; $params[]=$year; }

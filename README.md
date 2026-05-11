@@ -15,9 +15,9 @@ clean modular architecture.
 |---|---|
 | **Authentication** | login, register, logout |
 | **Student** | dashboard, profile, requirements, schedules, payments, announcements |
-| **Registrar** | dashboard, verify students, validate requirements, graduates, masterlist (with CSV export) |
+| **Registrar** | dashboard, verify students, validate requirements, payment review, graduates, masterlist (with CSV export) |
 | **Alumni** | dashboard, profile, tracer survey, events, announcements |
-| **Admin** | dashboard, users, students, alumni list, payments, events, announcements, reports & analytics |
+| **Admin** | dashboard, users, students, alumni list, events, announcements, reports & analytics |
 
 ---
 
@@ -44,13 +44,13 @@ alumni/
 │
 ├── pages/                        # UI pages (organized by role)
 │   ├── student/                  # 6 pages
-│   ├── registrar/                # 5 pages
+│   ├── registrar/                # 6 pages
 │   ├── alumni/                   # 5 pages
-│   └── admin/                    # 9 pages
+│   └── admin/                    # 8 pages
 │
 ├── actions/                      # Form processors (POST/GET handlers)
 │   ├── student_*.php             # 4 student actions
-│   ├── registrar_*.php           # 3 registrar actions
+│   ├── registrar_*.php           # 4 registrar actions
 │   ├── alumni_*.php              # 3 alumni actions
 │   ├── admin_*.php               # 6 admin actions
 │   ├── export_*.php              # 4 CSV exports
@@ -113,7 +113,7 @@ alumni/
 2. Sidebar → **Requirements** → upload a PDF (e.g. clearance form).
 3. Sidebar → **Payments** → record `Yearbook Fee = 500.00`.
 4. Sidebar → **Schedules** → book a Photobooth slot.
-5. **Expected:** Each item appears in the table; reference number shown for payment.
+5. **Expected:** Each item appears in the table; payment status starts as pending until registrar review.
 
 ### TEST 3 — Schedule Conflict Prevention
 
@@ -123,11 +123,12 @@ alumni/
 ### TEST 4 — Registrar Validation & Approval
 
 1. Logout. Login as **registrar@sksu.edu.ph**.
-2. Sidebar → **Verify Students** → click *Approve* on Juan's row.
-3. **Expected:** Confirmation, Graduate ID issued, alumni account auto-created, user role flipped to `alumni`.
-4. Sidebar → **Requirements** → click ✓ to approve the uploaded file.
-5. Sidebar → **Graduates** → confirm the new Graduate ID is listed.
-6. Sidebar → **Masterlist** → filter & **Export CSV** to download the list.
+2. Sidebar → **Payments** → approve or disapprove the submitted payment.
+3. Sidebar → **Verify Students** → click *Approve* on Juan's row.
+4. **Expected:** Confirmation, Graduate ID issued, alumni account auto-created, user role flipped to `alumni`.
+5. Sidebar → **Requirements** → click ✓ to approve the uploaded file.
+6. Sidebar → **Graduates** → confirm the new Graduate ID is listed.
+7. Sidebar → **Masterlist** → filter & **Export CSV** to download the list.
 
 ### TEST 5 — Alumni Tracer + Event Registration
 
@@ -146,7 +147,7 @@ alumni/
    - Employment distribution (animated bars)
    - Per-course employment table
    - Per-academic-year graduate counts
-   - Payment summary by type
+   - Payment summary by approved type
 4. Click **Export Alumni CSV** → downloads `alumni_export_<date>.csv`.
 
 ### TEST 7 — Admin User Management
@@ -157,9 +158,10 @@ alumni/
 
 ### TEST 8 — Receipt Generation
 
-1. As a student, go to **Payments** → click the *Receipt* link on any row.
-2. **Expected:** A printable receipt page opens with reference number, amount, payer info.
-3. Click **Print** to verify clean print view.
+1. As a registrar, approve a pending payment.
+2. As the student, go to **Payments** → click the *Receipt* link on the approved row.
+3. **Expected:** A printable receipt page opens with reference number, amount, payer info.
+4. Click **Print** to verify clean print view.
 
 ---
 
@@ -225,7 +227,8 @@ Because the architecture is procedural and modular, no cross-module coupling nee
 | Register & login | ✅ | ✅ | ✅ | ✅ |
 | Upload requirements | ✅ | — | — | — |
 | Book schedules | ✅ | — | — | — |
-| Record payments / digital receipt | ✅ | — | — | — |
+| Submit payment for review / digital receipt | ✅ | — | — | — |
+| Approve or disapprove payments | — | ✅ | — | — |
 | Verify students & validate documents | — | ✅ | — | ✅ |
 | Generate Graduate ID | (auto) | ✅ | — | ✅ |
 | Generate masterlist + CSV | — | ✅ | — | ✅ |
@@ -235,7 +238,8 @@ Because the architecture is procedural and modular, no cross-module coupling nee
 | Manage users | — | — | — | ✅ |
 | Post announcements / events | — | — | — | ✅ |
 | Reports & analytics | — | — | — | ✅ |
-| CSV exports (alumni / payments / tracer) | — | — | — | ✅ |
+| CSV exports (masterlist / payments) | — | ✅ | — | — |
+| CSV exports (alumni / tracer) | — | — | — | ✅ |
 
 ---
 

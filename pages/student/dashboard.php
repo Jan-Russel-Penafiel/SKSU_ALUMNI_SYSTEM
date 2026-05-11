@@ -102,7 +102,7 @@ include __DIR__ . '/../../templates/sidebar.php';
         <a href="payments.php" class="group flex items-center gap-3 px-3 py-3 rounded-lg border border-ink-200 hover:border-crimson-200 hover:bg-crimson-50/40 transition">
           <span class="w-9 h-9 rounded-md bg-crimson-50 text-crimson-700 flex items-center justify-center"><?= icon('cash','w-4 h-4') ?></span>
           <span class="flex-1">
-            <span class="block text-sm font-semibold text-ink-800">Record a payment</span>
+            <span class="block text-sm font-semibold text-ink-800">Submit a payment</span>
             <span class="block text-xs text-ink-500">Yearbook, toga, graduation fees</span>
           </span>
           <svg class="w-4 h-4 text-ink-300 group-hover:text-crimson-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>

@@ -133,7 +133,7 @@ CREATE TABLE `graduates` (
 --
 
 INSERT INTO `graduates` (`id`, `student_id`, `graduate_id`, `course`, `department`, `academic_year`, `graduation_date`, `honors`, `approved_by`, `approved_at`) VALUES
-(2, 2, 'GRAD-2026-21032', 'BS Information Technology', 'CCS', '2025-2026', '2026-05-01', NULL, 2, '2026-05-07 15:38:53');
+(2, 2, 'GRAD-2026-21032', 'Bachelor of Science in Information Technology (BSIT)', 'CCS', '2025-2026', '2026-05-01', NULL, 2, '2026-05-07 15:38:53');
 
 -- --------------------------------------------------------
 
@@ -148,9 +148,9 @@ CREATE TABLE `payments` (
   `amount` decimal(10,2) NOT NULL,
   `reference_no` varchar(50) NOT NULL,
   `payment_method` enum('Cash','GCash','Bank Transfer') DEFAULT 'Cash',
-  `status` enum('paid','pending','refunded') DEFAULT 'paid',
+  `status` enum('pending','paid','rejected','refunded') DEFAULT 'pending',
   `remarks` text DEFAULT NULL,
-  `paid_at` datetime DEFAULT current_timestamp()
+  `paid_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -222,7 +222,7 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `user_id`, `student_id`, `course`, `year_level`, `department`, `academic_year`, `expected_graduation`, `status`, `created_at`) VALUES
-(2, 6, '29154', 'BS Information Technology', '1st', 'CCS', '2025-2026', '2026-05-01', 'approved', '2026-05-07 15:36:17');
+(2, 6, '29154', 'Bachelor of Science in Information Technology (BSIT)', '1st', 'CCS', '2025-2026', '2026-05-01', 'approved', '2026-05-07 15:36:17');
 
 -- --------------------------------------------------------
 

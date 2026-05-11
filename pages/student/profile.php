@@ -22,9 +22,27 @@ include __DIR__ . '/../../templates/sidebar.php';
     <div><label class="label">Contact</label><input type="text" name="contact" class="input" value="<?= e($user['contact']) ?>"></div>
     <div class="sm:col-span-2"><label class="label">Address</label><input type="text" name="address" class="input" value="<?= e($user['address']) ?>"></div>
     <div><label class="label">Student ID</label><input type="text" class="input bg-gray-100" value="<?= e($student['student_id'] ?? '') ?>" disabled></div>
-    <div><label class="label">Course</label><input type="text" name="course" class="input" value="<?= e($student['course'] ?? '') ?>"></div>
+    <div><label class="label">Course</label>
+      <select name="course" class="input" required>
+        <option value="">Select course</option>
+        <?php foreach (app_course_groups() as $group => $courses): ?>
+          <optgroup label="<?= e($group) ?>">
+            <?php foreach ($courses as $courseOption): ?>
+              <option value="<?= e($courseOption) ?>" <?= ($student['course'] ?? '') === $courseOption ? 'selected' : '' ?>><?= e($courseOption) ?></option>
+            <?php endforeach; ?>
+          </optgroup>
+        <?php endforeach; ?>
+      </select>
+    </div>
     <div><label class="label">Year Level</label><input type="text" name="year_level" class="input" value="<?= e($student['year_level'] ?? '') ?>"></div>
-    <div><label class="label">Department</label><input type="text" name="department" class="input" value="<?= e($student['department'] ?? '') ?>"></div>
+    <div><label class="label">Department</label>
+      <select name="department" class="input">
+        <option value="">Select department</option>
+        <?php foreach (app_department_options() as $departmentOption): ?>
+          <option value="<?= e($departmentOption) ?>" <?= ($student['department'] ?? '') === $departmentOption ? 'selected' : '' ?>><?= e($departmentOption) ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
     <div><label class="label">Academic Year</label><input type="text" name="academic_year" class="input" value="<?= e($student['academic_year'] ?? '') ?>"></div>
     <div><label class="label">Expected Graduation</label><input type="date" name="expected_graduation" class="input" value="<?= e($student['expected_graduation'] ?? '') ?>"></div>
     <div class="sm:col-span-2 border-t pt-4">

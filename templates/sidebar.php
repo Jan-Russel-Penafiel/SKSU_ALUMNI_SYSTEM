@@ -19,6 +19,7 @@ if ($role === 'student') {
         ['Dashboard',         'pages/registrar/dashboard.php',     'home'],
         ['Verify Students',   'pages/registrar/verify.php',        'check-circle'],
         ['Requirements',      'pages/registrar/requirements.php',  'folder'],
+        ['Payments',          'pages/registrar/payments.php',      'cash'],
         ['Graduates',         'pages/registrar/graduates.php',     'cap'],
         ['Masterlist',        'pages/registrar/masterlist.php',    'list'],
     ];
@@ -36,7 +37,6 @@ if ($role === 'student') {
         ['Users',             'pages/admin/users.php',          'users'],
         ['Students',          'pages/admin/students.php',       'cap'],
         ['Alumni',            'pages/admin/alumni_list.php',    'briefcase'],
-        ['Payments',          'pages/admin/payments.php',       'cash'],
         ['Events',            'pages/admin/events.php',         'sparkles'],
         ['Announcements',     'pages/admin/announcements.php',  'megaphone'],
         ['Reports',           'pages/admin/reports.php',        'chart'],
